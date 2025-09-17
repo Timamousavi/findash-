@@ -536,6 +536,7 @@
             let volatilityData = [];
             let lastPrice = { stocks: 2100000, forex: 1.07, crypto: 68000 };
             let lastSentiment = { stocks: 50, forex: 50, crypto: 50, twitter: 50, news: 50, telegram: 50, timeline_stocks: 0, timeline_forex: 0, timeline_crypto: 0, volatility: 10 };
+            let lastSectorSentiment = { tech: 55, banking: 45, energy: 65, retail: 50, healthcare: 40 };
             
             function getNewSmoothedValue(oldValue, min, max, volatility) {
                 let change = (Math.random() - 0.5) * volatility;
@@ -632,10 +633,20 @@
                     sourceChart.updateOptions({ xaxis: { categories: sourceDataPoints.map(d => d.name) }, colors: [avgSourceColor] });
                     sourceChart.updateSeries([{ data: sourceDataPoints.map(d => Math.round(d.sentiment)) }]);
                     
-                    const sectorCategories = [translations[currentLanguage].tech, translations[currentLanguage].banking, translations[currentLanguage].energy, translations[currentLanguage].retail, translations[currentLanguage].healthcare];
-                    const sectorSentiments = sectorCategories.map(() => Math.random() * 80 + 10);
+                    const sectorKeys = ['tech', 'banking', 'energy', 'retail', 'healthcare'];
+                    sectorKeys.forEach(key => {
+                        lastSectorSentiment[key] = getNewSmoothedValue(lastSectorSentiment[key], 10, 90, 8);
+                    });
+
+                    const sectorCategories = sectorKeys.map(key => translations[currentLanguage][key]);
+                    const sectorSentiments = sectorKeys.map(key => lastSectorSentiment[key]);
                     const sectorColors = sectorSentiments.map(s => getSentimentColors(s).main);
-                    sectorChart.updateOptions({ xaxis: { categories: sectorCategories }, plotOptions: { bar: { colors: { ranges: [] }, distributed: true } }, colors: sectorColors });
+                    
+                    sectorChart.updateOptions({ 
+                        xaxis: { categories: sectorCategories }, 
+                        plotOptions: { bar: { colors: { ranges: [] }, distributed: true } }, 
+                        colors: sectorColors 
+                    });
                     sectorChart.updateSeries([{ data: sectorSentiments }]);
 
                     const posKeywords = [...mockKeywords.positive].sort(() => 0.5 - Math.random()).slice(0, 4);
@@ -738,4 +749,3 @@
     </script>
 </body>
 </html>
-

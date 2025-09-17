@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinSentrix - Global Financial Sentiment Dashboard</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/C5TztqGd/Bag-Logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -61,13 +62,16 @@
         }
     </style>
 </head>
-<body class="text-gray-200">
+<body>
     <div class="p-4 sm:p-6 lg:p-8">
         <!-- Header -->
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <div>
-                <h1 class="text-3xl font-bold text-white" data-translate-key="dashboardTitle">FinSentrix Dashboard</h1>
-                <p class="text-gray-400" data-translate-key="dashboardSubtitle">Real-time Global Financial Sentiment Analysis</p>
+            <div class="flex items-center">
+                <img src="https://i.ibb.co/C5TztqGd/Bag-Logo.png" alt="FinSentrix Logo" class="h-10 w-10 mr-4">
+                <div>
+                    <h1 class="text-3xl font-bold text-white" data-translate-key="dashboardTitle">FinSentrix Dashboard</h1>
+                    <p class="text-gray-400" data-translate-key="dashboardSubtitle">Real-time Global Financial Sentiment Analysis</p>
+                </div>
             </div>
             <div class="flex items-center gap-4 mt-4 sm:mt-0">
                  <button id="ai-briefing-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 flex items-center gap-2">
@@ -112,6 +116,19 @@
                 <section class="card p-4">
                     <h2 class="text-xl font-bold text-white mb-4" data-translate-key="timeline">Sentiment Timeline</h2>
                     <div id="timeline-chart"></div>
+                </section>
+
+                <!-- Sentiment vs. Price Correlation -->
+                <section class="card p-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                        <h2 class="text-xl font-bold text-white mb-2 sm:mb-0" data-translate-key="correlationTitle">Sentiment vs. Price Correlation</h2>
+                        <select id="asset-selector" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-auto p-2">
+                            <option value="stocks" data-translate-key="iranStocksAsset">Iran Stocks Index</option>
+                            <option value="forex" data-translate-key="forexAsset">EUR/USD</option>
+                            <option value="crypto" data-translate-key="cryptoAsset">BTC/USD</option>
+                        </select>
+                    </div>
+                    <div id="correlation-chart"></div>
                 </section>
             </div>
 
@@ -177,6 +194,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             let currentLanguage = 'en';
+            let currentAsset = 'stocks';
 
             const translations = {
                 en: {
@@ -190,7 +208,6 @@
                     timeline: "Sentiment Timeline",
                     source: "Sentiment by Source",
                     language: "Language Distribution",
-                    events: "Recent Events & Rumors",
                     eventsOnly: "Recent Events",
                     rumorDetector: "Rumor Detector",
                     aiBriefingModalTitle: "AI Market Briefing",
@@ -208,6 +225,12 @@
                     english: "English",
                     persian: "Persian",
                     totalPosts: "Total Posts",
+                    correlationTitle: "Sentiment vs. Price Correlation",
+                    iranStocksAsset: "Iran Stocks Index",
+                    forexAsset: "EUR/USD",
+                    cryptoAsset: "BTC/USD",
+                    sentiment: "Sentiment",
+                    price: "Price",
                 },
                 fa: {
                     dashboardTitle: "داشبورد فین‌سنتریکس",
@@ -220,7 +243,6 @@
                     timeline: "خط زمانی احساسات",
                     source: "احساسات بر اساس منبع",
                     language: "توزیع زبان",
-                    events: "رویدادها و شایعات اخیر",
                     eventsOnly: "رویدادهای اخیر",
                     rumorDetector: "ردیاب شایعات",
                     aiBriefingModalTitle: "گزارش بازار هوش مصنوعی",
@@ -238,6 +260,12 @@
                     english: "انگلیسی",
                     persian: "فارسی",
                     totalPosts: "کل پست‌ها",
+                    correlationTitle: "همبستگی احساسات و قیمت",
+                    iranStocksAsset: "شاخص بورس ایران",
+                    forexAsset: "EUR/USD",
+                    cryptoAsset: "BTC/USD",
+                    sentiment: "احساسات",
+                    price: "قیمت",
                 }
             };
             
@@ -249,10 +277,14 @@
 
                 document.querySelectorAll('[data-translate-key]').forEach(el => {
                     const key = el.getAttribute('data-translate-key');
-                    el.textContent = translations[lang][key];
+                    // Check if the element is an option tag
+                    if (el.tagName === 'OPTION') {
+                        el.innerText = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
                 });
 
-                // Update language buttons
                 const enBtn = document.getElementById('lang-en');
                 const faBtn = document.getElementById('lang-fa');
                 if (lang === 'en') {
@@ -267,111 +299,32 @@
                     enBtn.classList.remove('bg-gray-700', 'text-white');
                 }
                 
-                // Update charts
-                timelineChart.updateOptions({
-                    xaxis: {
-                        title: { text: '' } // Clear previous titles if any
-                    },
-                    yaxis: {
-                        title: { text: '' }
-                    },
-                    legend: {
-                        position: lang === 'fa' ? 'top' : 'bottom',
-                    }
-                });
-                
-                sourceChart.updateOptions({
-                     labels: [translations[lang].twitter, translations[lang].news, translations[lang].telegram],
-                     plotOptions: { pie: { donut: { labels: { total: { label: translations[lang].totalPosts } } } } }
-                });
-
-                languageChart.updateOptions({
-                    xaxis: {
-                        categories: [translations[lang].english, translations[lang].persian]
-                    }
-                });
+                timelineChart.updateOptions({ legend: { position: lang === 'fa' ? 'top' : 'bottom' } });
+                sourceChart.updateOptions({ labels: [translations[lang].twitter, translations[lang].news, translations[lang].telegram], plotOptions: { pie: { donut: { labels: { total: { label: translations[lang].totalPosts } } } } } });
+                languageChart.updateOptions({ xaxis: { categories: [translations[lang].english, translations[lang].persian] } });
+                updateCorrelationChartAsset();
             }
 
-
             // --- CHART OPTIONS ---
-            // Common options for gauge charts
-            const gaugeOptions = (color) => ({
-                chart: { type: 'radialBar', sparkline: { enabled: true } },
-                series: [0],
-                plotOptions: {
-                    radialBar: {
-                        startAngle: -90,
-                        endAngle: 90,
-                        hollow: { margin: 5, size: '50%' },
-                        track: { background: '#374151' },
-                        dataLabels: {
-                            name: { show: false },
-                            value: {
-                                offsetY: -2,
-                                fontSize: '22px',
-                                color: color,
-                                formatter: (val) => `${val}%`,
-                            }
-                        }
-                    }
-                },
-                fill: { colors: [color] },
-                stroke: { dashArray: 4 },
-                labels: ['Sentiment'],
-            });
-
-            // Timeline Chart Options
-            const timelineOptions = {
-                chart: { type: 'area', height: 350, toolbar: { show: false }, zoom: { enabled: false } },
-                series: [
-                    { name: 'Stocks', data: [] },
-                    { name: 'Forex', data: [] },
-                    { name: 'Crypto', data: [] },
-                ],
+            const gaugeOptions = (color) => ({ chart: { type: 'radialBar', sparkline: { enabled: true } }, series: [0], plotOptions: { radialBar: { startAngle: -90, endAngle: 90, hollow: { margin: 5, size: '50%' }, track: { background: '#374151' }, dataLabels: { name: { show: false }, value: { offsetY: -2, fontSize: '22px', color: color, formatter: (val) => `${val}%` } } } }, fill: { colors: [color] }, stroke: { dashArray: 4 }, labels: ['Sentiment'] });
+            const timelineOptions = { chart: { type: 'area', height: 280, toolbar: { show: false }, zoom: { enabled: false } }, series: [ { name: 'Stocks', data: [] }, { name: 'Forex', data: [] }, { name: 'Crypto', data: [] }, ], dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 2 }, xaxis: { type: 'datetime', labels: { style: { colors: '#9ca3af' } } }, yaxis: { min: -100, max: 100, labels: { style: { colors: '#9ca3af' }, formatter: (val) => `${val}%` } }, colors: ['#34d399', '#60a5fa', '#f59e0b'], tooltip: { theme: 'dark' }, grid: { borderColor: '#374151' }, legend: { labels: { colors: '#d1d5db' } } };
+            const sourceOptions = { chart: { type: 'donut', height: 250 }, series: [0, 0, 0], labels: ['Twitter', 'News', 'Telegram'], colors: ['#60a5fa', '#34d399', '#a78bfa'], legend: { position: 'bottom', labels: { colors: '#d1d5db' } }, dataLabels: { enabled: false }, plotOptions: { pie: { donut: { labels: { show: true, total: { show: true, label: 'Total Posts', color: '#d1d5db' } } } } } };
+            const languageOptions = { chart: { type: 'bar', height: 210, toolbar: { show: false } }, series: [{ name: 'Posts', data: [0, 0] }], xaxis: { categories: ['English', 'Persian'], labels: { style: { colors: '#9ca3af' } } }, yaxis: { labels: { style: { colors: '#9ca3af' } } }, colors: ['#34d399'], grid: { borderColor: '#374151' }, plotOptions: { bar: { horizontal: true, borderRadius: 4 } }, dataLabels: { enabled: false } };
+            const correlationOptions = {
+                chart: { type: 'line', height: 280, toolbar: { show: false }, zoom: { enabled: false } },
+                series: [ { name: 'Sentiment', type: 'area', data: [] }, { name: 'Price', type: 'line', data: [] } ],
                 dataLabels: { enabled: false },
                 stroke: { curve: 'smooth', width: 2 },
-                xaxis: {
-                    type: 'datetime',
-                    labels: {
-                        style: { colors: '#9ca3af' }
-                    }
-                },
-                yaxis: {
-                    min: -100, max: 100,
-                    labels: {
-                        style: { colors: '#9ca3af' },
-                        formatter: (val) => `${val}%`,
-                    }
-                },
-                colors: ['#34d399', '#60a5fa', '#f59e0b'],
-                tooltip: { theme: 'dark' },
+                xaxis: { type: 'datetime', labels: { style: { colors: '#9ca3af' } } },
+                yaxis: [
+                    { seriesName: 'Sentiment', min: -100, max: 100, labels: { style: { colors: '#60a5fa' }, formatter: (val) => `${val}%` }, title: { text: 'Sentiment', style: { color: '#60a5fa', fontWeight: 600 } } },
+                    { seriesName: 'Price', opposite: true, labels: { style: { colors: '#f59e0b' } }, title: { text: 'Price', style: { color: '#f59e0b', fontWeight: 600 } } }
+                ],
+                colors: ['#60a5fa', '#f59e0b'],
+                tooltip: { theme: 'dark', shared: true, intersect: false, y: { formatter: (val, { seriesIndex }) => seriesIndex === 0 ? `${val.toFixed(0)}%` : val.toFixed(2) } },
                 grid: { borderColor: '#374151' },
                 legend: { labels: { colors: '#d1d5db' } }
             };
-
-            // Source Chart Options
-            const sourceOptions = {
-                chart: { type: 'donut', height: 250 },
-                series: [0, 0, 0],
-                labels: ['Twitter', 'News', 'Telegram'],
-                colors: ['#60a5fa', '#34d399', '#a78bfa'],
-                legend: { position: 'bottom', labels: { colors: '#d1d5db' } },
-                dataLabels: { enabled: false },
-                plotOptions: { pie: { donut: { labels: { show: true, total: { show: true, label: 'Total Posts', color: '#d1d5db' } } } } }
-            };
-
-            // Language Chart Options
-            const languageOptions = {
-                chart: { type: 'bar', height: 210, toolbar: { show: false } },
-                series: [{ name: 'Posts', data: [0, 0] }],
-                xaxis: { categories: ['English', 'Persian'], labels: { style: { colors: '#9ca3af' } } },
-                yaxis: { labels: { style: { colors: '#9ca3af' } } },
-                colors: ['#34d399'],
-                grid: { borderColor: '#374151' },
-                plotOptions: { bar: { horizontal: true, borderRadius: 4 } },
-                dataLabels: { enabled: false }
-            };
-
 
             // --- CHART INITIALIZATION ---
             const stocksChart = new ApexCharts(document.querySelector("#stocks-chart"), gaugeOptions('#34d399'));
@@ -380,67 +333,53 @@
             const timelineChart = new ApexCharts(document.querySelector("#timeline-chart"), timelineOptions);
             const sourceChart = new ApexCharts(document.querySelector("#source-chart"), sourceOptions);
             const languageChart = new ApexCharts(document.querySelector("#language-chart"), languageOptions);
+            const correlationChart = new ApexCharts(document.querySelector("#correlation-chart"), correlationOptions);
             
-            stocksChart.render();
-            forexChart.render();
-            cryptoChart.render();
-            timelineChart.render();
-            sourceChart.render();
-            languageChart.render();
+            stocksChart.render(); forexChart.render(); cryptoChart.render(); timelineChart.render(); sourceChart.render(); languageChart.render(); correlationChart.render();
 
             // --- DATA & HELPERS ---
             const MAX_DATA_POINTS = 30;
-            let timelineData = {
-                stocks: [],
-                forex: [],
-                crypto: []
-            };
+            let timelineData = { stocks: [], forex: [], crypto: [] };
+            let correlationData = { sentiment: [], price: [] };
+            let lastPrice = { stocks: 2100000, forex: 1.07, crypto: 68000 };
             
-            function getRandomInt(min, max) {
-                min = Math.ceil(min);
-                max = Math.floor(max);
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            }
-
+            function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
             let currentMarketState = {};
 
             const mockEvents = [
-                // English Events
-                { title: "FED hints at interest rate cuts, market reacts positively.", sentiment: "Positive", source: "News", type: "event" },
-                { title: "Rumors of $BTC ETF approval causing surge in speculation.", sentiment: "Positive", source: "Twitter", type: "rumor" },
-                { title: "Unexpected inflation data from EU impacts EUR/USD pairs.", sentiment: "Negative", source: "News", type: "event" },
-                { title: "Tech Giant $AAPL misses earnings expectations, stock dips.", sentiment: "Negative", source: "Telegram", type: "event" },
-                { title: "Major crypto exchange announces security audit completion.", sentiment: "Neutral", source: "Twitter", type: "event" },
-                { title: "Central Bank of Iran holds currency rates steady.", sentiment: "Neutral", source: "News", type: "event"},
-                { title: "Retail trader sentiment for $TSLA is overwhelmingly bullish on social media.", sentiment: "Positive", source: "Twitter", type: "rumor"},
-                // Persian Events
-                { title: "بانک مرکزی نرخ بهره را برای کنترل تورم افزایش داد.", sentiment: "Neutral", source: "News", type: "event" },
-                { title: "شایعاتی مبنی بر عرضه اولیه سهام یک شرکت فناوری بزرگ در بورس تهران.", sentiment: "Positive", source: "Telegram", type: "rumor" },
-                { title: "تحلیلگران پیش‌بینی می‌کنند که شاخص کل بورس در هفته آینده رشد خواهد کرد.", sentiment: "Positive", source: "News", type: "event" },
-                { title: "گزارش‌های ضد و نقیض درباره مذاکرات تجاری جدید.", sentiment: "Negative", source: "Twitter", type: "rumor" },
-                { title: "افزایش قیمت دلار در بازار آزاد نگرانی‌هایی را ایجاد کرده است.", sentiment: "Negative", source: "Telegram", type: "event" }
+                { title: "FED hints at interest rate cuts, market reacts positively.", sentiment: "Positive", source: "News", type: "event" }, { title: "Rumors of $BTC ETF approval causing surge in speculation.", sentiment: "Positive", source: "Twitter", type: "rumor" }, { title: "Unexpected inflation data from EU impacts EUR/USD pairs.", sentiment: "Negative", source: "News", type: "event" }, { title: "Tech Giant $AAPL misses earnings expectations, stock dips.", sentiment: "Negative", source: "Telegram", type: "event" }, { title: "Major crypto exchange announces security audit completion.", sentiment: "Neutral", source: "Twitter", type: "event" }, { title: "Central Bank of Iran holds currency rates steady.", sentiment: "Neutral", source: "News", type: "event"}, { title: "Retail trader sentiment for $TSLA is overwhelmingly bullish on social media.", sentiment: "Positive", source: "Twitter", type: "rumor"},
+                { title: "بانک مرکزی نرخ بهره را برای کنترل تورم افزایش داد.", sentiment: "Neutral", source: "News", type: "event" }, { title: "شایعاتی مبنی بر عرضه اولیه سهام یک شرکت فناوری بزرگ در بورس تهران.", sentiment: "Positive", source: "Telegram", type: "rumor" }, { title: "تحلیلگران پیش‌بینی می‌کنند که شاخص کل بورس در هفته آینده رشد خواهد کرد.", sentiment: "Positive", source: "News", type: "event" }, { title: "گزارش‌های ضد و نقیض درباره مذاکرات تجاری جدید.", sentiment: "Negative", source: "Twitter", type: "rumor" }, { title: "افزایش قیمت دلار در بازار آزاد نگرانی‌هایی را ایجاد کرده است.", sentiment: "Negative", source: "Telegram", type: "event" }
             ];
 
-            function getSentimentColor(sentiment) {
-                if (sentiment === 'Positive') return 'text-green-400';
-                if (sentiment === 'Negative') return 'text-red-400';
-                return 'text-yellow-400';
-            }
+            function getSentimentColor(sentiment) { if (sentiment === 'Positive') return 'text-green-400'; if (sentiment === 'Negative') return 'text-red-400'; return 'text-yellow-400'; }
+            function getTranslatedSentiment(sentimentKey) { return { 'Positive': translations[currentLanguage].positive, 'Negative': translations[currentLanguage].negative, 'Neutral': translations[currentLanguage].neutral, }[sentimentKey] || sentimentKey; }
 
-            function getTranslatedSentiment(sentimentKey) {
-                 const sentimentMap = {
-                    'Positive': translations[currentLanguage].positive,
-                    'Negative': translations[currentLanguage].negative,
-                    'Neutral': translations[currentLanguage].neutral,
+            function updateCorrelationChartAsset() {
+                const asset = currentAsset;
+                const priceFormatters = {
+                    stocks: (val) => `${(val / 1000).toFixed(0)}k IRR`,
+                    forex: (val) => `$${val.toFixed(4)}`,
+                    crypto: (val) => `$${(val / 1000).toFixed(1)}k`
                 };
-                return sentimentMap[sentimentKey] || sentimentKey;
+                const priceTitles = {
+                    stocks: `${translations[currentLanguage].price} (IRR)`,
+                    forex: `${translations[currentLanguage].price} (USD)`,
+                    crypto: `${translations[currentLanguage].price} (USD)`,
+                }
+                correlationChart.updateOptions({
+                    series: [ { name: translations[currentLanguage].sentiment, type: 'area', data: [] }, { name: translations[currentLanguage].price, type: 'line', data: [] } ],
+                    yaxis: [
+                        { seriesName: translations[currentLanguage].sentiment, title: { text: translations[currentLanguage].sentiment }, min: -100, max: 100 },
+                        { seriesName: translations[currentLanguage].price, opposite: true, title: { text: priceTitles[asset] }, labels: { formatter: priceFormatters[asset] } }
+                    ],
+                });
+                correlationData = { sentiment: [], price: [] }; // Reset data
             }
-
 
             function updateDashboard() {
                 const now = new Date();
+                const newTimestamp = now.getTime();
                 
-                // Update Gauges
                 const stocksSentiment = getRandomInt(30, 85);
                 const forexSentiment = getRandomInt(20, 70);
                 const cryptoSentiment = getRandomInt(10, 95);
@@ -448,169 +387,107 @@
                 forexChart.updateSeries([forexSentiment]);
                 cryptoChart.updateSeries([cryptoSentiment]);
 
-                 // Store current state for AI briefing
-                currentMarketState = {
-                    stocks: stocksSentiment,
-                    forex: forexSentiment,
-                    crypto: cryptoSentiment,
-                    topEvent: mockEvents[0].title
-                };
+                currentMarketState = { stocks: stocksSentiment, forex: forexSentiment, crypto: cryptoSentiment, topEvent: mockEvents[0].title };
 
-                // Update Timeline
-                const newTimestamp = new Date().getTime();
                 timelineData.stocks.push([newTimestamp, getRandomInt(-80, 80)]);
                 timelineData.forex.push([newTimestamp, getRandomInt(-60, 60)]);
                 timelineData.crypto.push([newTimestamp, getRandomInt(-95, 95)]);
-
                 if (timelineData.stocks.length > MAX_DATA_POINTS) {
-                    timelineData.stocks.shift();
-                    timelineData.forex.shift();
-                    timelineData.crypto.shift();
+                    timelineData.stocks.shift(); timelineData.forex.shift(); timelineData.crypto.shift();
                 }
-                
-                timelineChart.updateSeries([
-                    { name: 'Stocks', data: timelineData.stocks },
-                    { name: 'Forex', data: timelineData.forex },
-                    { name: 'Crypto', data: timelineData.crypto },
-                ]);
+                timelineChart.updateSeries([ { name: translations[currentLanguage].iranStocks, data: timelineData.stocks }, { name: translations[currentLanguage].forex, data: timelineData.forex }, { name: translations[currentLanguage].crypto, data: timelineData.crypto } ]);
 
-                // Update Source Chart
-                sourceChart.updateSeries([getRandomInt(1000, 5000), getRandomInt(500, 2000), getRandomInt(800, 3000)]);
+                const sentimentForCorrelation = { stocks: stocksSentiment, forex: forexSentiment, crypto: cryptoSentiment }[currentAsset];
+                const priceMovementFactor = (sentimentForCorrelation - 50) / 50; // -1 to 1
+                const priceVolatility = { stocks: 5000, forex: 0.0005, crypto: 200 }[currentAsset];
+                lastPrice[currentAsset] += (priceMovementFactor * priceVolatility) + (Math.random() - 0.5) * priceVolatility;
+                correlationData.sentiment.push([newTimestamp, sentimentForCorrelation * 2 - 100]); // Scale to -100, 100
+                correlationData.price.push([newTimestamp, lastPrice[currentAsset]]);
+                if (correlationData.sentiment.length > MAX_DATA_POINTS) {
+                    correlationData.sentiment.shift(); correlationData.price.shift();
+                }
+                correlationChart.updateSeries([ { data: correlationData.sentiment }, { data: correlationData.price } ]);
                 
-                // Update Language Chart
+                sourceChart.updateSeries([getRandomInt(1000, 5000), getRandomInt(500, 2000), getRandomInt(800, 3000)]);
                 languageChart.updateSeries([{ data: [getRandomInt(5000, 15000), getRandomInt(1000, 4000)] }]);
 
-                // Update Feeds
                 const eventsFeed = document.getElementById('events-feed');
                 const rumorsFeed = document.getElementById('rumors-feed');
                 eventsFeed.innerHTML = '';
                 rumorsFeed.innerHTML = '';
-
-                const shuffledData = mockEvents.sort(() => 0.5 - Math.random());
-                
-                const events = shuffledData.filter(item => item.type === 'event');
-                const rumors = shuffledData.filter(item => item.type === 'rumor');
-
+                const shuffledData = [...mockEvents].sort(() => 0.5 - Math.random());
                 const populateFeed = (feedElement, data) => {
                     data.slice(0, 4).forEach(item => {
                         const itemEl = document.createElement('div');
                         itemEl.className = 'p-3 border-b border-gray-700 last:border-b-0';
-                        itemEl.innerHTML = `
-                            <p class="font-medium text-gray-200">${item.title}</p>
-                            <div class="flex justify-between items-center mt-1 text-xs">
-                                <span class="font-semibold ${getSentimentColor(item.sentiment)}">${getTranslatedSentiment(item.sentiment)}</span>
-                                <span class="text-gray-400">${translations[currentLanguage][item.source.toLowerCase()]}</span>
-                            </div>
-                        `;
+                        itemEl.innerHTML = `<p class="font-medium text-gray-200">${item.title}</p><div class="flex justify-between items-center mt-1 text-xs"><span class="font-semibold ${getSentimentColor(item.sentiment)}">${getTranslatedSentiment(item.sentiment)}</span><span class="text-gray-400">${translations[currentLanguage][item.source.toLowerCase()]}</span></div>`;
                         feedElement.appendChild(itemEl);
                     });
                 };
-                
-                populateFeed(eventsFeed, events);
-                populateFeed(rumorsFeed, rumors);
+                populateFeed(eventsFeed, shuffledData.filter(item => item.type === 'event'));
+                populateFeed(rumorsFeed, shuffledData.filter(item => item.type === 'rumor'));
 
-
-                // Update Timestamp
-                const lastUpdatedEl = document.getElementById('last-updated');
-                lastUpdatedEl.innerHTML = `<span data-translate-key="lastUpdated">${translations[currentLanguage].lastUpdated}</span>: ${now.toLocaleTimeString()}`;
-
-                // --- AI BRIEFING MODAL LOGIC ---
-                const aiModal = document.getElementById('ai-modal');
-                const openModalBtn = document.getElementById('ai-briefing-btn');
-                const closeModalBtn = document.getElementById('close-modal-btn');
-                const modalBackdrop = document.getElementById('modal-backdrop');
-                const generateBtn = document.getElementById('generate-briefing-btn');
-                const briefingContent = document.getElementById('briefing-content');
-                const briefingSources = document.getElementById('briefing-sources');
-                const sourcesList = document.getElementById('sources-list');
-
-                const openModal = () => aiModal.classList.remove('hidden');
-                const closeModal = () => aiModal.classList.add('hidden');
-
-                openModalBtn.addEventListener('click', openModal);
-                closeModalBtn.addEventListener('click', closeModal);
-                modalBackdrop.addEventListener('click', closeModal);
-
-                generateBtn.addEventListener('click', async () => {
-                    briefingContent.innerHTML = `<div class="flex items-center gap-2"><div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div><span>${translations[currentLanguage].generatingAnalysis}</span></div>`;
-                    briefingSources.classList.add('hidden');
-                    sourcesList.innerHTML = '';
-                    generateBtn.disabled = true;
-
-                    const systemPrompt = "You are a world-class financial analyst. Your role is to provide a concise, single-paragraph market briefing based on the provided sentiment data. Ground your analysis in real-world events using your search tool. If the user asks in Persian, respond in Persian.";
-                    const userQuery = `
-                        Generate a market briefing based on the following real-time sentiment data:
-                        - Iran Stock Market Sentiment: ${currentMarketState.stocks}% positive
-                        - Forex Market Sentiment: ${currentMarketState.forex}% positive
-                        - Cryptocurrency Market Sentiment: ${currentMarketState.crypto}% positive
-                        - A key detected event is: "${currentMarketState.topEvent}"
-                        
-                        Explain the likely reasons for this sentiment, citing recent news or events. Keep it brief and professional. The user's preferred language is ${currentLanguage === 'fa' ? 'Persian' : 'English'}.
-                    `;
-                    
-                    const apiKey = ""; 
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-                    
-                    const payload = {
-                        contents: [{ parts: [{ text: userQuery }] }],
-                        tools: [{ "google_search": {} }],
-                        systemInstruction: {
-                            parts: [{ text: systemPrompt }]
-                        },
-                    };
-
-                    try {
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`API error: ${response.statusText}`);
-                        }
-
-                        const result = await response.json();
-                        const candidate = result.candidates?.[0];
-
-                        if (candidate && candidate.content?.parts?.[0]?.text) {
-                            const text = candidate.content.parts[0].text;
-                            briefingContent.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
-
-                            const groundingMetadata = candidate.groundingMetadata;
-                            if (groundingMetadata && groundingMetadata.groundingAttributions) {
-                                const sources = groundingMetadata.groundingAttributions
-                                    .map(attr => ({ uri: attr.web?.uri, title: attr.web?.title }))
-                                    .filter(source => source.uri && source.title);
-
-                                if (sources.length > 0) {
-                                    sourcesList.innerHTML = sources.map((source, index) => 
-                                        `<li><a href="${source.uri}" target="_blank" class="text-blue-400 hover:underline">${index + 1}. ${source.title}</a></li>`
-                                    ).join('');
-                                    briefingSources.classList.remove('hidden');
-                                }
-                            }
-                        } else {
-                            throw new Error("Invalid response structure from API.");
-                        }
-                    } catch (error) {
-                        console.error("Error generating briefing:", error);
-                        briefingContent.innerHTML = `<p class="text-red-400">${translations[currentLanguage].failedToGenerate}</p>`;
-                    } finally {
-                        generateBtn.disabled = false;
-                    }
-                });
+                document.getElementById('last-updated').innerHTML = `<span data-translate-key="lastUpdated">${translations[currentLanguage].lastUpdated}</span>: ${now.toLocaleTimeString()}`;
             }
-            // Initial load and periodic updates
-            updateDashboard();
-            setInterval(updateDashboard, 3000); // Update every 3 seconds
-
-            // Setup language switcher
+            
+            setInterval(updateDashboard, 3000);
             document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
             document.getElementById('lang-fa').addEventListener('click', () => setLanguage('fa'));
+            document.getElementById('asset-selector').addEventListener('change', (e) => {
+                currentAsset = e.target.value;
+                updateCorrelationChartAsset();
+            });
        
-            // Set initial language
+            const aiModal = document.getElementById('ai-modal');
+            const openModalBtn = document.getElementById('ai-briefing-btn');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const generateBtn = document.getElementById('generate-briefing-btn');
+            const briefingContent = document.getElementById('briefing-content');
+            const briefingSources = document.getElementById('briefing-sources');
+            const sourcesList = document.getElementById('sources-list');
+            const openModal = () => aiModal.classList.remove('hidden');
+            const closeModal = () => aiModal.classList.add('hidden');
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            modalBackdrop.addEventListener('click', closeModal);
+            generateBtn.addEventListener('click', async () => {
+                briefingContent.innerHTML = `<div class="flex items-center gap-2"><div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div><span>${translations[currentLanguage].generatingAnalysis}</span></div>`;
+                briefingSources.classList.add('hidden');
+                sourcesList.innerHTML = '';
+                generateBtn.disabled = true;
+                const systemPrompt = "You are a world-class financial analyst. Your role is to provide a concise, single-paragraph market briefing based on the provided sentiment data. Ground your analysis in real-world events using your search tool. If the user asks in Persian, respond in Persian.";
+                const userQuery = `Generate a market briefing based on the following real-time sentiment data:\n- Iran Stock Market Sentiment: ${currentMarketState.stocks}% positive\n- Forex Market Sentiment: ${currentMarketState.forex}% positive\n- Cryptocurrency Market Sentiment: ${currentMarketState.crypto}% positive\n- A key detected event is: "${currentMarketState.topEvent}"\n\nExplain the likely reasons for this sentiment, citing recent news or events. Keep it brief and professional. The user's preferred language is ${currentLanguage === 'fa' ? 'Persian' : 'English'}.`;
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const payload = { contents: [{ parts: [{ text: userQuery }] }], tools: [{ "google_search": {} }], systemInstruction: { parts: [{ text: systemPrompt }] } };
+                try {
+                    const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        const text = candidate.content.parts[0].text;
+                        briefingContent.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+                        const groundingMetadata = candidate.groundingMetadata;
+                        if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                            const sources = groundingMetadata.groundingAttributions.map(attr => ({ uri: attr.web?.uri, title: attr.web?.title })).filter(source => source.uri && source.title);
+                            if (sources.length > 0) {
+                                sourcesList.innerHTML = sources.map((source, index) => `<li><a href="${source.uri}" target="_blank" class="text-blue-400 hover:underline">${index + 1}. ${source.title}</a></li>`).join('');
+                                briefingSources.classList.remove('hidden');
+                            }
+                        }
+                    } else { throw new Error("Invalid response structure from API."); }
+                } catch (error) {
+                    console.error("Error generating briefing:", error);
+                    briefingContent.innerHTML = `<p class="text-red-400">${translations[currentLanguage].failedToGenerate}</p>`;
+                } finally {
+                    generateBtn.disabled = false;
+                }
+            });
+
             setLanguage('en');
+            updateDashboard();
         });
     </script>
 </body>

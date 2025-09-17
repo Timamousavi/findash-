@@ -29,6 +29,10 @@
             --sentiment-negative: #f59e0b;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-primary);
@@ -114,128 +118,243 @@
             filter: drop-shadow(0 0 5px var(--glow-color, #fff));
         }
 
+        #sidebar {
+            background-color: var(--bg-primary);
+            border-right: 1px solid var(--border-color);
+        }
+
+        #sidebar a {
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+
+        #sidebar a:hover {
+            background-color: rgba(48, 54, 61, 0.5);
+            color: var(--text-primary);
+        }
+         #sidebar a.active {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            font-weight: 600;
+         }
+         #sidebar a.active svg {
+            color: var(--bg-primary);
+        }
+
     </style>
 </head>
 <body class="text-gray-300">
-    <div class="p-4 sm:p-6 lg:p-8">
-        <!-- Header -->
-        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-            <div class="flex items-center">
-                <img src="https://i.ibb.co/C5TztqGd/Bag-Logo.png" alt="FinSentrix Logo" class="h-10 w-10 mr-4">
-                <div>
-                    <h1 class="text-3xl font-bold text-white" data-translate-key="dashboardTitle">FinSentrix</h1>
-                    <p class="text-sm text-gray-400" data-translate-key="dashboardSubtitle">Global Financial Sentiment Analysis</p>
+
+    <!-- Sidebar Menu -->
+    <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full lg:translate-x-0">
+        <div class="h-full px-3 py-4 overflow-y-auto">
+            <div class="flex items-center pl-2.5 mb-8">
+                <img src="https://i.ibb.co/C5TztqGd/Bag-Logo.png" alt="FinSentrix Logo" class="h-8 w-8 mr-3">
+                <span class="self-center text-xl font-semibold whitespace-nowrap text-white">FinSentrix</span>
+            </div>
+            <ul class="space-y-2 font-medium">
+                 <li>
+                    <a href="#sentiment-gauges" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <span class="ml-3" data-translate-key="sidebarGauges">Sentiment Gauges</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#sentiment-timeline" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarTimeline">Sentiment Timeline</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="#sentiment-correlation" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                       <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarCorrelation">Price Correlation</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#sector-sentiment" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarSectors">Sector Sentiment</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="#sentiment-sources" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarSources">Sources</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="#keyword-drivers" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarKeywords">Keyword Drivers</span>
+                    </a>
+                </li>
+                 <li>
+                    <a href="#recent-events" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3h3m-3 4h3m-3 4h3m-3 4h3"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="eventsOnly">Recent Events</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#rumor-detector" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="rumorDetector">Rumor Detector</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <div id="main-content" class="lg:ml-64">
+        <div class="p-4 sm:p-6 lg:p-8">
+            <!-- Header -->
+            <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+                <div class="flex items-center">
+                    <button id="menu-toggle" class="lg:hidden text-gray-400 hover:text-white focus:outline-none mr-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <img src="https://i.ibb.co/C5TztqGd/Bag-Logo.png" alt="FinSentrix Logo" class="h-10 w-10 mr-4 hidden sm:block">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white" data-translate-key="dashboardTitle">FinSentrix</h1>
+                        <p class="text-sm text-gray-400" data-translate-key="dashboardSubtitle">Global Financial Sentiment Analysis</p>
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-center gap-4 mt-4 sm:mt-0">
-                 <button id="ai-briefing-btn" class="glowing-button bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 text-cyan-300 font-semibold py-2 px-4 rounded-lg transition-all duration-300 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
-                    <span data-translate-key="aiBriefing">AI Briefing</span>
-                </button>
-                <div class="flex items-center gap-1 p-1 rounded-lg bg-gray-800/50 border border-gray-700/50">
-                    <button id="lang-en" class="px-3 py-1 text-sm font-medium rounded-md bg-gray-700 text-white transition-colors">EN</button>
-                    <button id="lang-fa" class="px-3 py-1 text-sm font-medium rounded-md text-gray-400 transition-colors">FA</button>
+                <div class="flex items-center gap-4 mt-4 sm:mt-0">
+                    <button id="ai-briefing-btn" class="glowing-button bg-cyan-500/10 border border-cyan-500/30 hover:bg-cyan-500/20 text-cyan-300 font-semibold py-2 px-4 rounded-lg transition-all duration-300 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+                        <span data-translate-key="aiBriefing">AI Briefing</span>
+                    </button>
+                    <div class="flex items-center gap-1 p-1 rounded-lg bg-gray-800/50 border border-gray-700/50">
+                        <button id="lang-en" class="px-3 py-1 text-sm font-medium rounded-md bg-gray-700 text-white transition-colors">EN</button>
+                        <button id="lang-fa" class="px-3 py-1 text-sm font-medium rounded-md text-gray-400 transition-colors">FA</button>
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-cyan-400">
+                        <div class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+                        </div>
+                        <span id="last-updated"><span data-translate-key="lastUpdated">Last updated</span>: ...</span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2 text-sm text-cyan-400">
-                    <div class="relative flex h-3 w-3">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
-                    </div>
-                    <span id="last-updated"><span data-translate-key="lastUpdated">Last updated</span>: ...</span>
+            </header>
+
+            <!-- Dashboard Grid -->
+            <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 flex flex-col gap-6">
+                    <section id="sentiment-gauges" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div id="stocks-card" class="card p-4">
+                            <h2 class="text-md font-semibold text-white" data-translate-key="iranStocks">Iran Stocks Sentiment</h2>
+                            <p class="text-xs text-gray-400 mt-1" data-translate-key="iranStocksDesc">Provides an at-a-glance sentiment score for the Iranian stock market.</p>
+                            <div id="stocks-chart"></div>
+                        </div>
+                        <div id="forex-card" class="card p-4">
+                            <h2 class="text-md font-semibold text-white" data-translate-key="forex">Forex Sentiment</h2>
+                            <p class="text-xs text-gray-400 mt-1" data-translate-key="forexDesc">Measures the collective feeling towards the Forex market.</p>
+                            <div id="forex-chart"></div>
+                        </div>
+                        <div id="crypto-card" class="card p-4">
+                            <h2 class="text-md font-semibold text-white" data-translate-key="crypto">Crypto Sentiment</h2>
+                            <p class="text-xs text-gray-400 mt-1" data-translate-key="cryptoDesc">Aggregates the general attitude towards cryptocurrencies.</p>
+                            <div id="crypto-chart"></div>
+                        </div>
+                    </section>
+                    
+                    <section id="sentiment-timeline" class="card p-5">
+                        <div class="flex justify-between items-start">
+                             <div>
+                                <h2 class="text-xl font-bold text-white" data-translate-key="timeline">Sentiment Timeline</h2>
+                                <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="timelineDesc">Tracks the historical ebb and flow of sentiment across markets.</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <h3 class="text-md font-semibold text-white" data-translate-key="volatilityIndex">Volatility Index</h3>
+                                <div id="volatility-chart" style="min-height: 80px;"></div>
+                            </div>
+                        </div>
+                        <div id="timeline-chart"></div>
+                    </section>
+
+                    <section id="sentiment-correlation" class="card p-5">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+                            <div>
+                                <h2 class="text-xl font-bold text-white" data-translate-key="correlationTitle">Sentiment vs. Price Correlation</h2>
+                                <p class="text-sm text-gray-400 mt-1" data-translate-key="correlationDesc">Analyzes how public sentiment may influence asset price.</p>
+                            </div>
+                            <select id="asset-selector" class="bg-gray-800/80 border border-gray-700/50 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full sm:w-auto p-2.5 transition mt-4 sm:mt-0">
+                                <option value="stocks" data-translate-key="iranStocksAsset">Iran Stocks Index</option>
+                                <option value="forex" data-translate-key="forexAsset">EUR/USD</option>
+                                <option value="crypto" data-translate-key="cryptoAsset">BTC/USD</option>
+                            </select>
+                        </div>
+                        <div id="correlation-chart"></div>
+                    </section>
+
+                    <section id="sector-sentiment" class="card p-5">
+                        <h2 class="text-xl font-bold text-white" data-translate-key="sectorSentimentTitle">Stock Market Sector Sentiment</h2>
+                        <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="sectorSentimentDesc">Shows which industry sectors are driving the current market sentiment.</p>
+                        <div id="sector-chart"></div>
+                    </section>
                 </div>
-            </div>
-        </header>
 
-        <!-- Dashboard Grid -->
-        <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2 flex flex-col gap-6">
-                <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div id="stocks-card" class="card p-4">
-                        <h2 class="text-md font-semibold text-white" data-translate-key="iranStocks">Iran Stocks Sentiment</h2>
-                        <p class="text-xs text-gray-400 mt-1" data-translate-key="iranStocksDesc">Provides an at-a-glance sentiment score for the Iranian stock market, indicating the overall mood (positive, neutral, or negative).</p>
-                        <div id="stocks-chart"></div>
-                    </div>
-                    <div id="forex-card" class="card p-4">
-                        <h2 class="text-md font-semibold text-white" data-translate-key="forex">Forex Sentiment</h2>
-                        <p class="text-xs text-gray-400 mt-1" data-translate-key="forexDesc">Measures the collective feeling towards the Forex market, useful for gauging currency traders' optimism or pessimism.</p>
-                        <div id="forex-chart"></div>
-                    </div>
-                    <div id="crypto-card" class="card p-4">
-                        <h2 class="text-md font-semibold text-white" data-translate-key="crypto">Crypto Sentiment</h2>
-                         <p class="text-xs text-gray-400 mt-1" data-translate-key="cryptoDesc">Aggregates the general attitude towards cryptocurrencies, reflecting the excitement or fear in the digital asset space.</p>
-                        <div id="crypto-chart"></div>
-                    </div>
-                </section>
-                
-                <section class="card p-5">
-                    <h2 class="text-xl font-bold text-white" data-translate-key="timeline">Sentiment Timeline</h2>
-                    <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="timelineDesc">This chart tracks and compares the historical ebb and flow of sentiment across all three markets, revealing trends and market reactions over time.</p>
-                    <div id="timeline-chart"></div>
-                </section>
+                <div class="lg:col-span-1 flex flex-col gap-6">
+                    <section id="sentiment-sources" class="card p-5">
+                        <h2 class="text-xl font-bold text-white" data-translate-key="source">Sentiment by Source</h2>
+                        <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="sourceDesc">Maps the sentiment mood across different platforms.</p>
+                        <div id="source-chart" style="min-height: 260px;"></div>
+                    </section>
 
-                <section class="card p-5">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
-                        <div>
-                            <h2 class="text-xl font-bold text-white" data-translate-key="correlationTitle">Sentiment vs. Price Correlation</h2>
-                            <p class="text-sm text-gray-400 mt-1" data-translate-key="correlationDesc">A powerful tool to analyze how changes in public sentiment may influence the price of a selected asset, helping to identify potential market-moving trends.</p>
-                        </div>
-                        <select id="asset-selector" class="bg-gray-800/80 border border-gray-700/50 text-white text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full sm:w-auto p-2.5 transition mt-4 sm:mt-0">
-                            <option value="stocks" data-translate-key="iranStocksAsset">Iran Stocks Index</option>
-                            <option value="forex" data-translate-key="forexAsset">EUR/USD</option>
-                            <option value="crypto" data-translate-key="cryptoAsset">BTC/USD</option>
-                        </select>
-                    </div>
-                    <div id="correlation-chart"></div>
-                </section>
-            </div>
-
-            <div class="lg:col-span-1 flex flex-col gap-6">
-                <section class="card p-5">
-                    <h2 class="text-xl font-bold text-white" data-translate-key="source">Sentiment by Source</h2>
-                    <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="sourceDesc">This radar chart provides a unique 'sentiment signature' by mapping the mood across platforms. A larger shape indicates stronger sentiment.</p>
-                    <div id="source-chart" style="min-height: 260px;"></div>
-                </section>
-                
-                <section class="card p-5">
-                    <h2 class="text-xl font-bold text-white" data-translate-key="language">Language Distribution</h2>
-                    <p class="text-sm text-gray-400 mt-1" data-translate-key="languageDesc">Displays the percentage breakdown of analyzed content between English and Persian, highlighting the linguistic focus of current market discussions.</p>
-                    <div id="language-distribution-content" class="space-y-4 pt-4">
-                        <!-- English -->
-                        <div>
-                            <div class="flex justify-between items-center mb-1 text-sm">
-                                <span class="font-semibold text-gray-300" data-translate-key="english">English</span>
-                                <span id="lang-en-percent" class="font-mono text-cyan-400">0%</span>
+                    <section id="keyword-drivers" class="card p-5">
+                        <h2 class="text-xl font-bold text-white" data-translate-key="keywordDriversTitle">Top Keyword Drivers</h2>
+                        <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="keywordDriversDesc">Identifies keywords influencing market conversations.</p>
+                        <div id="keywords-content" class="space-y-4">
+                            <div>
+                                <h3 class="font-semibold text-green-400" data-translate-key="positiveKeywords">Positive Drivers</h3>
+                                <div id="positive-keywords" class="flex flex-wrap gap-2 mt-2"></div>
                             </div>
-                            <div class="w-full bg-gray-700/50 rounded-full h-2">
-                                <div id="lang-en-bar" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500 ease-out"></div>
+                            <div>
+                                <h3 class="font-semibold text-red-400" data-translate-key="negativeKeywords">Negative Drivers</h3>
+                                <div id="negative-keywords" class="flex flex-wrap gap-2 mt-2"></div>
                             </div>
                         </div>
-                        <!-- Persian -->
-                        <div>
-                            <div class="flex justify-between items-center mb-1 text-sm">
-                                <span class="font-semibold text-gray-300" data-translate-key="persian">Persian</span>
-                                <span id="lang-fa-percent" class="font-mono text-green-400">0%</span>
+                    </section>
+                    
+                    <section id="language-distribution" class="card p-5">
+                        <h2 class="text-xl font-bold text-white" data-translate-key="language">Language Distribution</h2>
+                        <p class="text-sm text-gray-400 mt-1" data-translate-key="languageDesc">Displays the breakdown of content by language.</p>
+                        <div id="language-distribution-content" class="space-y-4 pt-4">
+                             <div>
+                                <div class="flex justify-between items-center mb-1 text-sm">
+                                    <span class="font-semibold text-gray-300" data-translate-key="english">English</span>
+                                    <span id="lang-en-percent" class="font-mono text-cyan-400">0%</span>
+                                </div>
+                                <div class="w-full bg-gray-700/50 rounded-full h-2">
+                                    <div id="lang-en-bar" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500 ease-out"></div>
+                                </div>
                             </div>
-                            <div class="w-full bg-gray-700/50 rounded-full h-2">
-                                <div id="lang-fa-bar" class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500 ease-out"></div>
+                             <div>
+                                <div class="flex justify-between items-center mb-1 text-sm">
+                                    <span class="font-semibold text-gray-300" data-translate-key="persian">Persian</span>
+                                    <span id="lang-fa-percent" class="font-mono text-green-400">0%</span>
+                                </div>
+                                <div class="w-full bg-gray-700/50 rounded-full h-2">
+                                    <div id="lang-fa-bar" class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500 ease-out"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                <section class="card p-5 flex flex-col">
-                    <h2 class="text-xl font-bold text-white" data-translate-key="eventsOnly">Recent Events</h2>
-                    <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="eventsDesc">A feed of the latest, confirmed financial news and significant market events gathered from reputable media outlets.</p>
-                    <div id="events-feed" class="events-feed flex-grow overflow-y-auto h-48 pr-2"></div>
-                </section>
+                    <section id="recent-events" class="card p-5 flex flex-col">
+                        <h2 class="text-xl font-bold text-white" data-translate-key="eventsOnly">Recent Events</h2>
+                        <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="eventsDesc">A feed of the latest confirmed financial news.</p>
+                        <div id="events-feed" class="events-feed flex-grow overflow-y-auto h-48 pr-2"></div>
+                    </section>
 
-                <section class="card p-5 flex flex-col">
-                    <h2 class="text-xl font-bold text-white" data-translate-key="rumorDetector">Rumor Detector</h2>
-                     <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="rumorDetectorDesc">This feed captures unverified speculation, chatter, and trending topics from social sources like Twitter and Telegram to detect potential market shifts early.</p>
-                    <div id="rumors-feed" class="events-feed flex-grow overflow-y-auto h-48 pr-2"></div>
-                </section>
-            </div>
-        </main>
+                    <section id="rumor-detector" class="card p-5 flex flex-col">
+                        <h2 class="text-xl font-bold text-white" data-translate-key="rumorDetector">Rumor Detector</h2>
+                        <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="rumorDetectorDesc">Captures unverified speculation and chatter.</p>
+                        <div id="rumors-feed" class="events-feed flex-grow overflow-y-auto h-48 pr-2"></div>
+                    </section>
+                </div>
+            </main>
+        </div>
     </div>
 
     <div id="ai-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
@@ -273,15 +392,15 @@
             const translations = {
                 en: { 
                     dashboardTitle: "FinSentrix", dashboardSubtitle: "Global Financial Sentiment Analysis", aiBriefing: "AI Briefing", lastUpdated: "Last updated", 
-                    iranStocks: "Iran Stocks Sentiment", iranStocksDesc: "Provides an at-a-glance sentiment score for the Iranian stock market, indicating the overall mood (positive, neutral, or negative).",
-                    forex: "Forex Sentiment", forexDesc: "Measures the collective feeling towards the Forex market, useful for gauging currency traders' optimism or pessimism.",
-                    crypto: "Crypto Sentiment", cryptoDesc: "Aggregates the general attitude towards cryptocurrencies, reflecting the excitement or fear in the digital asset space.",
-                    timeline: "Sentiment Timeline", timelineDesc: "This chart tracks and compares the historical ebb and flow of sentiment across all three markets, revealing trends and market reactions over time.",
-                    source: "Sentiment by Source", sourceDesc: "This radar chart provides a unique 'sentiment signature' by mapping the mood across platforms. A larger shape indicates stronger sentiment.",
-                    language: "Language Distribution", languageDesc: "Displays the percentage breakdown of analyzed content between English and Persian, highlighting the linguistic focus of current market discussions.",
-                    eventsOnly: "Recent Events", eventsDesc: "A feed of the latest, confirmed financial news and significant market events gathered from reputable media outlets.",
-                    rumorDetector: "Rumor Detector", rumorDetectorDesc: "This feed captures unverified speculation, chatter, and trending topics from social sources like Twitter and Telegram to detect potential market shifts early.",
-                    correlationTitle: "Sentiment vs. Price Correlation", correlationDesc: "A powerful tool to analyze how changes in public sentiment may influence the price of a selected asset, helping to identify potential market-moving trends.",
+                    iranStocks: "Iran Stocks Sentiment", iranStocksDesc: "Provides an at-a-glance sentiment score for the Iranian stock market.",
+                    forex: "Forex Sentiment", forexDesc: "Measures the collective feeling towards the Forex market.",
+                    crypto: "Crypto Sentiment", cryptoDesc: "Aggregates the general attitude towards cryptocurrencies.",
+                    timeline: "Sentiment Timeline", timelineDesc: "Tracks the historical ebb and flow of sentiment across markets.",
+                    source: "Sentiment by Source", sourceDesc: "Maps the sentiment mood across different platforms.",
+                    language: "Language Distribution", languageDesc: "Displays the breakdown of content by language.",
+                    eventsOnly: "Recent Events", eventsDesc: "A feed of the latest confirmed financial news.",
+                    rumorDetector: "Rumor Detector", rumorDetectorDesc: "Captures unverified speculation and chatter.",
+                    correlationTitle: "Sentiment vs. Price Correlation", correlationDesc: "Analyzes how public sentiment may influence asset price.",
                     aiBriefingModalTitle: "AI Market Briefing", briefingPlaceholder: "Click the button below to generate a real-time market summary based on the latest sentiment data.", 
                     sources: "Sources:", generateBriefing: "Generate Briefing", generatingAnalysis: "Generating analysis...", failedToGenerate: "Failed to generate briefing. Please check the console for details.", 
                     positive: "Positive", negative: "Negative", neutral: "Neutral", 
@@ -289,18 +408,24 @@
                     english: "English", persian: "Persian", totalPosts: "Total Posts", 
                     iranStocksAsset: "Iran Stocks Index", forexAsset: "EUR/USD", cryptoAsset: "BTC/USD", 
                     sentiment: "Sentiment", price: "Price", volume: "Volume", 
+                    sidebarGauges: "Sentiment Gauges", sidebarTimeline: "Sentiment Timeline", sidebarCorrelation: "Price Correlation", sidebarSources: "Sources", sidebarLanguage: "Language",
+                    sidebarSectors: "Sector Sentiment", sectorSentimentTitle: "Stock Market Sector Sentiment", sectorSentimentDesc: "Shows which industry sectors are driving the current market sentiment.",
+                    tech: "Technology", banking: "Banking", energy: "Energy", retail: "Retail", healthcare: "Healthcare",
+                    volatilityIndex: "Volatility Index",
+                    keywordDriversTitle: "Top Keyword Drivers", keywordDriversDesc: "Identifies keywords influencing market conversations.", positiveKeywords: "Positive Drivers", negativeKeywords: "Negative Drivers",
+                    sidebarKeywords: "Keyword Drivers",
                 },
                 fa: { 
                     dashboardTitle: "فین‌سنتریکس", dashboardSubtitle: "تحلیل احساسات مالی جهانی", aiBriefing: "گزارش هوشمند", lastUpdated: "آخرین بروزرسانی", 
-                    iranStocks: "احساسات بورس ایران", iranStocksDesc: "نمره لحظه‌ای احساسات برای بازار بورس ایران را نمایش می‌دهد که بیانگر حال و هوای کلی (مثبت، خنثی یا منفی) است.",
-                    forex: "احساسات فارکس", forexDesc: "احساسات جمعی نسبت به بازار فارکس را اندازه‌گیری می‌کند که برای سنجش خوش‌بینی یا بدبینی معامله‌گران ارز مفید است.",
-                    crypto: "احساسات رمزارز", cryptoDesc: "نگرش کلی نسبت به رمزارزها را جمع‌آوری کرده و هیجان یا ترس حاکم بر فضای دارایی‌های دیجیتال را منعکس می‌کند.",
-                    timeline: "خط زمانی احساسات", timelineDesc: "این نمودار، جزر و مد تاریخی احساسات را در هر سه بازار ردیابی و مقایسه کرده و روندها و واکنش‌های بازار را در طول زمان آشکار می‌سازد.",
-                    source: "احساسات بر اساس منبع", sourceDesc: "این نمودار راداری یک «امضای احساسات» منحصربه‌فرد ارائه می‌دهد و حال و هوای پلتفرم‌های مختلف را ترسیم می‌کند. شکل بزرگتر نشان‌دهنده احساسات قوی‌تر است.",
-                    language: "توزیع زبان", languageDesc: "نمایش‌دهنده تفکیک درصدی محتوای تحلیل‌شده بین زبان‌های انگلیسی و فارسی است و تمرکز زبانی بحث‌های فعلی بازار را برجسته می‌کند.",
-                    eventsOnly: "رویدادهای اخیر", eventsDesc: "فید آخرین اخبار مالی تأیید شده و رویدادهای مهم بازار که از رسانه‌های معتبر جمع‌آوری شده است.",
-                    rumorDetector: "ردیاب شایعات", rumorDetectorDesc: "این فید شایعات تأیید نشده، گفتگوها و موضوعات داغ را از منابع اجتماعی مانند توییتر و تلگرام برای تشخیص زودهنگام تغییرات احتمالی بازار ثبت می‌کند.",
-                    correlationTitle: "همبستگی احساسات و قیمت", correlationDesc: "ابزاری قدرتمند برای تحلیل چگونگی تأثیر تغییرات در احساسات عمومی بر قیمت یک دارایی منتخب، که به شناسایی روندهای بالقوه تأثیرگذار بر بازار کمک می‌کند.",
+                    iranStocks: "احساسات بورس ایران", iranStocksDesc: "نمره لحظه‌ای احساسات برای بازار بورس ایران را نمایش می‌دهد.",
+                    forex: "احساسات فارکس", forexDesc: "احساسات جمعی نسبت به بازار فارکس را اندازه‌گیری می‌کند.",
+                    crypto: "احساسات رمزارز", cryptoDesc: "نگرش کلی نسبت به رمزارزها را جمع‌آوری می‌کند.",
+                    timeline: "خط زمانی احساسات", timelineDesc: "جزر و مد تاریخی احساسات را در هر سه بازار ردیابی می‌کند.",
+                    source: "احساسات بر اساس منبع", sourceDesc: "حال و هوای پلتفرم‌های مختلف را ترسیم می‌کند.",
+                    language: "توزیع زبان", languageDesc: "نمایش‌دهنده تفکیک درصدی محتوای تحلیل‌شده است.",
+                    eventsOnly: "رویدادهای اخیر", eventsDesc: "فید آخرین اخبار مالی تأیید شده.",
+                    rumorDetector: "ردیاب شایعات", rumorDetectorDesc: "شایعات تأیید نشده و گفتگوها را ثبت می‌کند.",
+                    correlationTitle: "همبستگی احساسات و قیمت", correlationDesc: "چگونگی تأثیر احساسات عمومی بر قیمت دارایی را تحلیل می‌کند.",
                     aiBriefingModalTitle: "گزارش بازار هوش مصنوعی", briefingPlaceholder: "برای تولید خلاصه‌ای از بازار بر اساس آخرین داده‌های احساسات، روی دکمه زیر کلیک کنید.", 
                     sources: "منابع:", generateBriefing: "تولید گزارش", generatingAnalysis: "در حال تولید تحلیل...", failedToGenerate: "تولید گزارش با شکست مواجه شد. لطفاً کنسول را بررسی کنید.", 
                     positive: "مثبت", negative: "منفی", neutral: "خنثی", 
@@ -308,6 +433,12 @@
                     english: "انگلیسی", persian: "فارسی", totalPosts: "کل پست‌ها", 
                     iranStocksAsset: "شاخص بورس ایران", forexAsset: "EUR/USD", cryptoAsset: "BTC/USD", 
                     sentiment: "احساسات", price: "قیمت", volume: "حجم", 
+                    sidebarGauges: "ابزارهای احساسات", sidebarTimeline: "خط زمانی احساسات", sidebarCorrelation: "همبستگی قیمت", sidebarSources: "منابع", sidebarLanguage: "زبان",
+                    sidebarSectors: "احساسات بخشی", sectorSentimentTitle: "احساسات بخش‌های بازار سهام", sectorSentimentDesc: "نشان می‌دهد کدام بخش‌های صنعتی احساسات فعلی بازار را هدایت می‌کنند.",
+                    tech: "فناوری", banking: "بانکداری", energy: "انرژی", retail: "خرده‌فروشی", healthcare: "مراقبت‌های بهداشتی",
+                    volatilityIndex: "شاخص نوسان",
+                    keywordDriversTitle: "کلمات کلیدی اصلی", keywordDriversDesc: "کلمات کلیدی تأثیرگذار بر گفتگوهای بازار را شناسایی می‌کند.", positiveKeywords: "محرک‌های مثبت", negativeKeywords: "محرک‌های منفی",
+                    sidebarKeywords: "کلمات کلیدی",
                 }
             };
 
@@ -327,8 +458,10 @@
                 document.body.className = `text-gray-300 lang-${lang}`;
                 document.querySelectorAll('[data-translate-key]').forEach(el => {
                     const key = el.getAttribute('data-translate-key');
-                    if (el.tagName === 'OPTION') { el.innerText = translations[lang][key]; } 
-                    else { el.textContent = translations[lang][key]; }
+                    if(translations[lang][key]) {
+                        if (el.tagName === 'OPTION') { el.innerText = translations[lang][key]; } 
+                        else { el.textContent = translations[lang][key]; }
+                    }
                 });
                 const enBtn = document.getElementById('lang-en'), faBtn = document.getElementById('lang-fa');
                 if (lang === 'en') {
@@ -367,37 +500,25 @@
                 labels: ['Sentiment'],
             };
 
-            const timelineOptions = { chart: { type: 'area', height: 280, toolbar: { show: false }, zoom: { enabled: false } }, series: [ { name: 'Stocks', data: [] }, { name: 'Forex', data: [] }, { name: 'Crypto', data: [] } ], dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 2.5 }, xaxis: { type: 'datetime', labels: { style: { colors: '#8b949e' } }, axisBorder: { show: false }, axisTicks: { show: false } }, yaxis: { min: -100, max: 100, labels: { style: { colors: '#8b949e' }, formatter: (val) => typeof val === 'number' ? `${val.toFixed(0)}%` : val } }, colors: [ 'var(--sentiment-positive)', 'var(--sentiment-neutral)', 'var(--sentiment-negative)' ], tooltip: { theme: 'dark' }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', strokeDashArray: 4 }, legend: { labels: { colors: '#c9d1d9' } }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.3, opacityFrom: 0.6, opacityTo: 0.1, stops: [0, 90, 100] } } };
+            const timelineOptions = { chart: { type: 'area', height: 250, toolbar: { show: false }, zoom: { enabled: false } }, series: [ { name: 'Stocks', data: [] }, { name: 'Forex', data: [] }, { name: 'Crypto', data: [] } ], dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 2.5 }, xaxis: { type: 'datetime', labels: { style: { colors: '#8b949e' } }, axisBorder: { show: false }, axisTicks: { show: false } }, yaxis: { min: -100, max: 100, labels: { style: { colors: '#8b949e' }, formatter: (val) => typeof val === 'number' ? `${val.toFixed(0)}%` : val } }, colors: [ 'var(--sentiment-positive)', 'var(--sentiment-neutral)', 'var(--sentiment-negative)' ], tooltip: { theme: 'dark' }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', strokeDashArray: 4 }, legend: { labels: { colors: '#c9d1d9' } }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.3, opacityFrom: 0.6, opacityTo: 0.1, stops: [0, 90, 100] } } };
             
             const sourceOptions = {
                 chart: { type: 'radar', height: 280, toolbar: { show: false } },
                 series: [{ name: 'Sentiment', data: [] }],
-                xaxis: {
-                    categories: [],
-                    labels: {
-                        style: {
-                            colors: ['#c9d1d9', '#c9d1d9', '#c9d1d9'],
-                            fontSize: '14px',
-                            fontWeight: 500,
-                        }
-                    }
-                },
+                xaxis: { categories: [], labels: { style: { colors: ['#c9d1d9', '#c9d1d9', '#c9d1d9'], fontSize: '14px', fontWeight: 500 } } },
                 yaxis: { show: false, min: 0, max: 100 },
                 stroke: { width: 3, curve: 'smooth' },
                 fill: { opacity: 0.3 },
                 markers: { size: 5, hover: { size: 7 } },
                 tooltip: { theme: 'dark', y: { formatter: (val) => typeof val === 'number' ? val.toFixed(0) + "%" : val } },
-                plotOptions: {
-                    radar: {
-                        polygons: {
-                            strokeColors: 'rgba(48, 54, 61, 0.7)',
-                            connectorColors: 'rgba(48, 54, 61, 0.7)',
-                        }
-                    }
-                }
+                plotOptions: { radar: { polygons: { strokeColors: 'rgba(48, 54, 61, 0.7)', connectorColors: 'rgba(48, 54, 61, 0.7)' } } }
             };
 
             const correlationOptions = { chart: { type: 'line', height: 280, toolbar: { show: false }, zoom: { enabled: false } }, series: [ { name: 'Sentiment', type: 'area', data: [] }, { name: 'Price', type: 'line', data: [] } ], dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: [3, 2.5] }, xaxis: { type: 'datetime', labels: { style: { colors: '#8b949e' } } }, yaxis: [ { seriesName: 'Sentiment', min: -100, max: 100, labels: { style: { colors: 'var(--accent-cyan)', fontWeight: 500 }, formatter: (val) => typeof val === 'number' ? `${val.toFixed(0)}%` : val }, title: { text: 'Sentiment', style: { color: 'var(--accent-cyan)', fontWeight: 600 } } }, { seriesName: 'Price', opposite: true, labels: { style: { colors: 'var(--accent-orange)', fontWeight: 500 } }, title: { text: 'Price', style: { color: 'var(--accent-orange)', fontWeight: 600 } } } ], colors: ['var(--accent-cyan)', 'var(--accent-orange)'], tooltip: { theme: 'dark', shared: true, intersect: false, y: { formatter: (val, { seriesIndex }) => { if(typeof val !== 'number') return val; return seriesIndex === 0 ? `${val.toFixed(0)}%` : val.toFixed(2); } } }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', strokeDashArray: 4 }, legend: { labels: { colors: '#c9d1d9' } }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.5, opacityFrom: 0.7, opacityTo: 0.1, stops: [0, 90, 100] } } };
+            
+            const sectorOptions = { chart: { type: 'bar', height: 280, toolbar: { show: false } }, series: [{ data: [] }], plotOptions: { bar: { borderRadius: 4, horizontal: true, distributed: true, barHeight: '50%' } }, dataLabels: { enabled: false }, xaxis: { categories: [], labels: { style: { colors: '#8b949e' } } }, yaxis: { labels: { style: { colors: '#c9d1d9', fontSize: '14px', fontWeight: 500 } } }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)' }, legend: { show: false }, tooltip: { theme: 'dark', x: { show: false }, y: { title: { formatter: seriesName => '' }, formatter: (val) => `${val.toFixed(0)}% Sentiment` } } };
+
+            const volatilityOptions = { chart: { type: 'area', height: 80, sparkline: { enabled: true } }, series: [{ data: [] }], stroke: { curve: 'smooth', width: 2 }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.5, opacityFrom: 0.7, opacityTo: 0.1 } }, colors: ['var(--accent-purple)'], tooltip: { theme: 'dark', x: { show: false }, y: { title: { formatter: () => 'Volatility' }, formatter: (val) => val.toFixed(2) } } };
 
             const stocksChart = new ApexCharts(document.querySelector("#stocks-chart"), gaugeOptions);
             const forexChart = new ApexCharts(document.querySelector("#forex-chart"), gaugeOptions);
@@ -405,13 +526,16 @@
             const timelineChart = new ApexCharts(document.querySelector("#timeline-chart"), timelineOptions);
             const sourceChart = new ApexCharts(document.querySelector("#source-chart"), sourceOptions);
             const correlationChart = new ApexCharts(document.querySelector("#correlation-chart"), correlationOptions);
-            [stocksChart, forexChart, cryptoChart, timelineChart, sourceChart, correlationChart].forEach(c => c.render());
+            const sectorChart = new ApexCharts(document.querySelector("#sector-chart"), sectorOptions);
+            const volatilityChart = new ApexCharts(document.querySelector("#volatility-chart"), volatilityOptions);
+            [stocksChart, forexChart, cryptoChart, timelineChart, sourceChart, correlationChart, sectorChart, volatilityChart].forEach(c => c.render());
 
             const MAX_DATA_POINTS = 30;
             let timelineData = { stocks: [], forex: [], crypto: [] };
             let correlationData = { sentiment: [], price: [] };
+            let volatilityData = [];
             let lastPrice = { stocks: 2100000, forex: 1.07, crypto: 68000 };
-            let lastSentiment = { stocks: 50, forex: 50, crypto: 50, twitter: 50, news: 50, telegram: 50, timeline_stocks: 0, timeline_forex: 0, timeline_crypto: 0 };
+            let lastSentiment = { stocks: 50, forex: 50, crypto: 50, twitter: 50, news: 50, telegram: 50, timeline_stocks: 0, timeline_forex: 0, timeline_crypto: 0, volatility: 10 };
             
             function getNewSmoothedValue(oldValue, min, max, volatility) {
                 let change = (Math.random() - 0.5) * volatility;
@@ -421,6 +545,11 @@
 
             let currentMarketState = {};
             const mockEvents = [ { title: "FED hints at interest rate cuts, market reacts positively.", sentiment: "Positive", source: "News", type: "event" }, { title: "Rumors of $BTC ETF approval causing surge in speculation.", sentiment: "Positive", source: "Twitter", type: "rumor" }, { title: "Unexpected inflation data from EU impacts EUR/USD pairs.", sentiment: "Negative", source: "News", type: "event" }, { title: "Tech Giant $AAPL misses earnings expectations, stock dips.", sentiment: "Negative", source: "Telegram", type: "event" }, { title: "Major crypto exchange announces security audit completion.", sentiment: "Neutral", source: "Twitter", type: "event" }, { title: "Central Bank of Iran holds currency rates steady.", sentiment: "Neutral", source: "News", type: "event"}, { title: "Retail trader sentiment for $TSLA is overwhelmingly bullish on social media.", sentiment: "Positive", source: "Twitter", type: "rumor"}, { title: "بانک مرکزی نرخ بهره را برای کنترل تورم افزایش داد.", sentiment: "Neutral", source: "News", type: "event" }, { title: "شایعاتی مبنی بر عرضه اولیه سهام یک شرکت فناوری بزرگ در بورس تهران.", sentiment: "Positive", source: "Telegram", type: "rumor" }, { title: "تحلیلگران پیش‌بینی می‌کنند که شاخص کل بورس در هفته آینده رشد خواهد کرد.", sentiment: "Positive", source: "News", type: "event" }, { title: "گزارش‌های ضد و نقیض درباره مذاکرات تجاری جدید.", sentiment: "Negative", source: "Twitter", type: "rumor" }, { title: "افزایش قیمت دلار در بازار آزاد نگرانی‌هایی را ایجاد کرده است.", sentiment: "Negative", source: "Telegram", type: "event" } ];
+            const mockKeywords = {
+                positive: ["Bullish", "ATH", "Breakout", "Growth", "Profit", "Upgrade", "Buy", "Support", "Booming"],
+                negative: ["Bearish", "Crash", "Sell-off", "Decline", "Loss", "Downgrade", "Risk", "Fear", "Bubble"]
+            };
+            
             function getSentimentColorClass(sentiment) { if (sentiment === 'Positive') return 'text-green-400'; if (sentiment === 'Negative') return 'text-red-400'; return 'text-yellow-400'; }
             function getTranslatedSentiment(sentimentKey) { return { 'Positive': translations[currentLanguage].positive, 'Negative': translations[currentLanguage].negative, 'Neutral': translations[currentLanguage].neutral, }[sentimentKey] || sentimentKey; }
 
@@ -447,10 +576,11 @@
                     const now = new Date();
                     const newTimestamp = now.getTime();
                     
+                    const oldStocks = lastSentiment.stocks;
                     lastSentiment.stocks = getNewSmoothedValue(lastSentiment.stocks, 10, 95, 5);
                     lastSentiment.forex = getNewSmoothedValue(lastSentiment.forex, 10, 95, 5);
                     lastSentiment.crypto = getNewSmoothedValue(lastSentiment.crypto, 10, 95, 8);
-
+                    
                     const marketData = {
                         stocks: { sentiment: lastSentiment.stocks, chart: stocksChart, card: document.getElementById('stocks-card') },
                         forex: { sentiment: lastSentiment.forex, chart: forexChart, card: document.getElementById('forex-card') },
@@ -460,19 +590,12 @@
                     for (const market in marketData) {
                         const { sentiment, chart, card } = marketData[market];
                         const colors = getSentimentColors(sentiment);
-                        
                         chart.updateSeries([sentiment]);
-                        chart.updateOptions({
-                            fill: { gradient: { gradientToColors: [colors.main] } },
-                            plotOptions: { radialBar: { dataLabels: { value: { color: colors.main } } } }
-                        });
-                        
+                        chart.updateOptions({ fill: { gradient: { gradientToColors: [colors.main] } }, plotOptions: { radialBar: { dataLabels: { value: { color: colors.main } } } } });
                         card.classList.add('glowing-border');
                         card.style.setProperty('--glow-color', colors.glow);
                         const radialArea = card.querySelector('.apexcharts-radialbar-area');
-                        if (radialArea) {
-                            radialArea.style.setProperty('--glow-color', colors.main);
-                        }
+                        if (radialArea) radialArea.style.setProperty('--glow-color', colors.main);
                     }
 
                     currentMarketState = { stocks: marketData.stocks.sentiment, forex: marketData.forex.sentiment, crypto: marketData.crypto.sentiment };
@@ -480,14 +603,18 @@
                     lastSentiment.timeline_stocks = getNewSmoothedValue(lastSentiment.timeline_stocks, -90, 90, 15);
                     lastSentiment.timeline_forex = getNewSmoothedValue(lastSentiment.timeline_forex, -90, 90, 15);
                     lastSentiment.timeline_crypto = getNewSmoothedValue(lastSentiment.timeline_crypto, -90, 90, 20);
-
                     timelineData.stocks.push([newTimestamp, lastSentiment.timeline_stocks]);
                     timelineData.forex.push([newTimestamp, lastSentiment.timeline_forex]);
                     timelineData.crypto.push([newTimestamp, lastSentiment.timeline_crypto]);
-
                     if (timelineData.stocks.length > MAX_DATA_POINTS) { timelineData.stocks.shift(); timelineData.forex.shift(); timelineData.crypto.shift(); }
                     timelineChart.updateSeries([ { name: translations[currentLanguage].iranStocks, data: timelineData.stocks }, { name: translations[currentLanguage].forex, data: timelineData.forex }, { name: translations[currentLanguage].crypto, data: timelineData.crypto } ]);
                     
+                    const sentimentChange = Math.abs(lastSentiment.stocks - oldStocks);
+                    lastSentiment.volatility = getNewSmoothedValue(lastSentiment.volatility, 5, 25, sentimentChange + 2);
+                    volatilityData.push([newTimestamp, lastSentiment.volatility]);
+                    if (volatilityData.length > MAX_DATA_POINTS) volatilityData.shift();
+                    volatilityChart.updateSeries([{ data: volatilityData }]);
+
                     const sentimentForCorrelation = marketData[currentAsset].sentiment;
                     const priceMovementFactor = (sentimentForCorrelation - 50) / 50;
                     const priceVolatility = { stocks: 2500, forex: 0.0003, crypto: 150 }[currentAsset];
@@ -499,54 +626,40 @@
                     lastSentiment.twitter = getNewSmoothedValue(lastSentiment.twitter, 10, 95, 8);
                     lastSentiment.news = getNewSmoothedValue(lastSentiment.news, 10, 95, 4);
                     lastSentiment.telegram = getNewSmoothedValue(lastSentiment.telegram, 10, 95, 6);
-
-                    const sourceDataPoints = [
-                        { name: translations[currentLanguage].twitter, sentiment: lastSentiment.twitter },
-                        { name: translations[currentLanguage].news, sentiment: lastSentiment.news },
-                        { name: translations[currentLanguage].telegram, sentiment: lastSentiment.telegram },
-                    ];
-                    
+                    const sourceDataPoints = [ { name: translations[currentLanguage].twitter, sentiment: lastSentiment.twitter }, { name: translations[currentLanguage].news, sentiment: lastSentiment.news }, { name: translations[currentLanguage].telegram, sentiment: lastSentiment.telegram }, ];
                     const avgSourceSentiment = (lastSentiment.twitter + lastSentiment.news + lastSentiment.telegram) / 3;
                     const avgSourceColor = getSentimentColors(avgSourceSentiment).main;
-
-                    sourceChart.updateOptions({
-                        xaxis: { categories: sourceDataPoints.map(d => d.name) },
-                        colors: [avgSourceColor],
-                    });
+                    sourceChart.updateOptions({ xaxis: { categories: sourceDataPoints.map(d => d.name) }, colors: [avgSourceColor] });
                     sourceChart.updateSeries([{ data: sourceDataPoints.map(d => Math.round(d.sentiment)) }]);
+                    
+                    const sectorCategories = [translations[currentLanguage].tech, translations[currentLanguage].banking, translations[currentLanguage].energy, translations[currentLanguage].retail, translations[currentLanguage].healthcare];
+                    const sectorSentiments = sectorCategories.map(() => Math.random() * 80 + 10);
+                    const sectorColors = sectorSentiments.map(s => getSentimentColors(s).main);
+                    sectorChart.updateOptions({ xaxis: { categories: sectorCategories }, plotOptions: { bar: { colors: { ranges: [] }, distributed: true } }, colors: sectorColors });
+                    sectorChart.updateSeries([{ data: sectorSentiments }]);
+
+                    const posKeywords = [...mockKeywords.positive].sort(() => 0.5 - Math.random()).slice(0, 4);
+                    const negKeywords = [...mockKeywords.negative].sort(() => 0.5 - Math.random()).slice(0, 4);
+                    document.getElementById('positive-keywords').innerHTML = posKeywords.map(k => `<span class="bg-green-500/10 text-green-300 text-xs font-medium px-2.5 py-1 rounded-full">${k}</span>`).join('');
+                    document.getElementById('negative-keywords').innerHTML = negKeywords.map(k => `<span class="bg-red-500/10 text-red-300 text-xs font-medium px-2.5 py-1 rounded-full">${k}</span>`).join('');
 
                     const enPosts = Math.floor(getNewSmoothedValue(lastSentiment.enPosts || 10000, 5000, 15000, 1000));
                     const faPosts = Math.floor(getNewSmoothedValue(lastSentiment.faPosts || 2500, 1000, 4000, 500));
-                    lastSentiment.enPosts = enPosts;
-                    lastSentiment.faPosts = faPosts;
-
+                    lastSentiment.enPosts = enPosts; lastSentiment.faPosts = faPosts;
                     const totalLangPosts = enPosts + faPosts;
                     const enPercent = Math.round((enPosts / totalLangPosts) * 100), faPercent = 100 - enPercent;
                     document.getElementById('lang-en-percent').textContent = `${enPercent}%`; document.getElementById('lang-en-bar').style.width = `${enPercent}%`;
                     document.getElementById('lang-fa-percent').textContent = `${faPercent}%`; document.getElementById('lang-fa-bar').style.width = `${faPercent}%`;
                     
                     const eventsFeed = document.getElementById('events-feed'), rumorsFeed = document.getElementById('rumors-feed');
-                    if (Math.random() > 0.6) { // Update feeds more frequently
+                    if (Math.random() > 0.6) {
                         eventsFeed.innerHTML = ''; rumorsFeed.innerHTML = '';
                         const shuffledData = [...mockEvents].sort(() => 0.5 - Math.random());
                         const populateFeed = (feedElement, data) => {
                             data.slice(0, 5).forEach(item => {
                                 const itemEl = document.createElement('div');
                                 itemEl.className = 'py-3 border-b border-gray-800/50 last:border-b-0';
-                                const sentimentColor = getSentimentColorClass(item.sentiment);
-                                const sentimentIcon = icons[item.sentiment.toLowerCase()];
-                                const sourceIcon = icons[item.source.toLowerCase()];
-                                itemEl.innerHTML = `
-                                    <div class="flex items-start gap-4">
-                                        <div class="flex-shrink-0 mt-1 text-gray-500">${sourceIcon}</div>
-                                        <div class="flex-grow">
-                                            <p class="font-medium text-gray-300 text-sm leading-relaxed">${item.title}</p>
-                                            <div class="flex items-center mt-2 text-xs font-semibold ${sentimentColor}">
-                                                ${sentimentIcon}
-                                                <span class="ml-1.5">${getTranslatedSentiment(item.sentiment)}</span>
-                                            </div>
-                                        </div>
-                                    </div>`;
+                                itemEl.innerHTML = `<div class="flex items-start gap-4"><div class="flex-shrink-0 mt-1 text-gray-500">${icons[item.source.toLowerCase()]}</div><div class="flex-grow"><p class="font-medium text-gray-300 text-sm leading-relaxed">${item.title}</p><div class="flex items-center mt-2 text-xs font-semibold ${getSentimentColorClass(item.sentiment)}">${icons[item.sentiment.toLowerCase()]}<span class="ml-1.5">${getTranslatedSentiment(item.sentiment)}</span></div></div></div>`;
                                 feedElement.appendChild(itemEl);
                             });
                         };
@@ -554,9 +667,7 @@
                         populateFeed(rumorsFeed, shuffledData.filter(item => item.type === 'rumor'));
                     }
                     document.getElementById('last-updated').innerHTML = `<span data-translate-key="lastUpdated">${translations[currentLanguage].lastUpdated}</span>: ${now.toLocaleTimeString()}`;
-                } catch (error) {
-                    console.error("Dashboard update failed:", error);
-                }
+                } catch (error) { console.error("Dashboard update failed:", error); }
             }
             
             setInterval(updateDashboard, 2000); 
@@ -597,6 +708,29 @@
                     briefingContent.innerHTML = `<p class="text-red-400">${translations[currentLanguage].failedToGenerate}</p>`;
                 } finally { generateBtn.disabled = false; }
             });
+            
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            menuToggle.addEventListener('click', () => sidebar.classList.toggle('-translate-x-full'));
+
+            const sidebarLinks = document.querySelectorAll('#sidebar a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (window.innerWidth < 1024) sidebar.classList.add('-translate-x-full');
+                });
+            });
+
+            const sections = document.querySelectorAll('section[id]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        sidebarLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { root: null, rootMargin: '0px', threshold: 0.4 });
+            sections.forEach(section => observer.observe(section));
 
             setLanguage('en');
             updateDashboard();

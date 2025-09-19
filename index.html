@@ -114,8 +114,8 @@
             height: 200px;
         }
 
-        .apexcharts-radialbar-area {
-            filter: drop-shadow(0 0 5px var(--glow-color, #fff));
+        .apexcharts-radialbar-area, .apexcharts-radar-series, .apexcharts-line-series, .apexcharts-area-series {
+            filter: drop-shadow(0 0 8px var(--glow-color, rgba(255,255,255,0.2)));
         }
 
         #sidebar {
@@ -186,6 +186,12 @@
                     <a href="#keyword-drivers" class="flex items-center p-2 text-gray-400 rounded-lg group">
                         <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path></svg>
                         <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarKeywords">Keyword Drivers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#volatility-index" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V7a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2z"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarVolatility">Volatility Index</span>
                     </a>
                 </li>
                  <li>
@@ -259,15 +265,9 @@
                     </section>
                     
                     <section id="sentiment-timeline" class="card p-5">
-                        <div class="flex justify-between items-start">
-                             <div>
-                                <h2 class="text-xl font-bold text-white" data-translate-key="timeline">Sentiment Timeline</h2>
-                                <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="timelineDesc">Tracks the historical ebb and flow of sentiment across markets.</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <h3 class="text-md font-semibold text-white" data-translate-key="volatilityIndex">Volatility Index</h3>
-                                <div id="volatility-chart" style="min-height: 80px;"></div>
-                            </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white" data-translate-key="timeline">Sentiment Timeline</h2>
+                            <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="timelineDesc">Tracks the historical ebb and flow of sentiment across markets.</p>
                         </div>
                         <div id="timeline-chart"></div>
                     </section>
@@ -295,6 +295,12 @@
                 </div>
 
                 <div class="lg:col-span-1 flex flex-col gap-6">
+                    <section id="volatility-index" class="card p-5">
+                        <h2 class="text-xl font-bold text-white" data-translate-key="volatilityIndexTitle">Volatility Index</h2>
+                        <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="volatilityIndexDesc">Measures the expected market fluctuation based on sentiment shifts.</p>
+                        <div id="volatility-chart" style="min-height: 120px;"></div>
+                    </section>
+
                     <section id="sentiment-sources" class="card p-5">
                         <h2 class="text-xl font-bold text-white" data-translate-key="source">Sentiment by Source</h2>
                         <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="sourceDesc">Maps the sentiment mood across different platforms.</p>
@@ -400,6 +406,7 @@
                     language: "Language Distribution", languageDesc: "Displays the breakdown of content by language.",
                     eventsOnly: "Recent Events", eventsDesc: "A feed of the latest confirmed financial news.",
                     rumorDetector: "Rumor Detector", rumorDetectorDesc: "Captures unverified speculation and chatter.",
+                    rumorConfidence: "Confidence",
                     correlationTitle: "Sentiment vs. Price Correlation", correlationDesc: "Analyzes how public sentiment may influence asset price.",
                     aiBriefingModalTitle: "AI Market Briefing", briefingPlaceholder: "Click the button below to generate a real-time market summary based on the latest sentiment data.", 
                     sources: "Sources:", generateBriefing: "Generate Briefing", generatingAnalysis: "Generating analysis...", failedToGenerate: "Failed to generate briefing. Please check the console for details.", 
@@ -411,9 +418,9 @@
                     sidebarGauges: "Sentiment Gauges", sidebarTimeline: "Sentiment Timeline", sidebarCorrelation: "Price Correlation", sidebarSources: "Sources", sidebarLanguage: "Language",
                     sidebarSectors: "Sector Sentiment", sectorSentimentTitle: "Stock Market Sector Sentiment", sectorSentimentDesc: "Shows which industry sectors are driving the current market sentiment.",
                     tech: "Technology", banking: "Banking", energy: "Energy", retail: "Retail", healthcare: "Healthcare",
-                    volatilityIndex: "Volatility Index",
+                    volatilityIndexTitle: "Volatility Index", volatilityIndexDesc: "Measures the expected market fluctuation based on sentiment shifts.",
                     keywordDriversTitle: "Top Keyword Drivers", keywordDriversDesc: "Identifies keywords influencing market conversations.", positiveKeywords: "Positive Drivers", negativeKeywords: "Negative Drivers",
-                    sidebarKeywords: "Keyword Drivers",
+                    sidebarKeywords: "Keyword Drivers", sidebarVolatility: "Volatility Index",
                 },
                 fa: { 
                     dashboardTitle: "فین‌سنتریکس", dashboardSubtitle: "تحلیل احساسات مالی جهانی", aiBriefing: "گزارش هوشمند", lastUpdated: "آخرین بروزرسانی", 
@@ -425,6 +432,7 @@
                     language: "توزیع زبان", languageDesc: "نمایش‌دهنده تفکیک درصدی محتوای تحلیل‌شده است.",
                     eventsOnly: "رویدادهای اخیر", eventsDesc: "فید آخرین اخبار مالی تأیید شده.",
                     rumorDetector: "ردیاب شایعات", rumorDetectorDesc: "شایعات تأیید نشده و گفتگوها را ثبت می‌کند.",
+                    rumorConfidence: "سطح اطمینان",
                     correlationTitle: "همبستگی احساسات و قیمت", correlationDesc: "چگونگی تأثیر احساسات عمومی بر قیمت دارایی را تحلیل می‌کند.",
                     aiBriefingModalTitle: "گزارش بازار هوش مصنوعی", briefingPlaceholder: "برای تولید خلاصه‌ای از بازار بر اساس آخرین داده‌های احساسات، روی دکمه زیر کلیک کنید.", 
                     sources: "منابع:", generateBriefing: "تولید گزارش", generatingAnalysis: "در حال تولید تحلیل...", failedToGenerate: "تولید گزارش با شکست مواجه شد. لطفاً کنسول را بررسی کنید.", 
@@ -436,9 +444,9 @@
                     sidebarGauges: "ابزارهای احساسات", sidebarTimeline: "خط زمانی احساسات", sidebarCorrelation: "همبستگی قیمت", sidebarSources: "منابع", sidebarLanguage: "زبان",
                     sidebarSectors: "احساسات بخشی", sectorSentimentTitle: "احساسات بخش‌های بازار سهام", sectorSentimentDesc: "نشان می‌دهد کدام بخش‌های صنعتی احساسات فعلی بازار را هدایت می‌کنند.",
                     tech: "فناوری", banking: "بانکداری", energy: "انرژی", retail: "خرده‌فروشی", healthcare: "مراقبت‌های بهداشتی",
-                    volatilityIndex: "شاخص نوسان",
+                    volatilityIndexTitle: "شاخص نوسان", volatilityIndexDesc: "نوسانات مورد انتظار بازار را بر اساس تغییرات احساسات اندازه‌گیری می‌کند.",
                     keywordDriversTitle: "کلمات کلیدی اصلی", keywordDriversDesc: "کلمات کلیدی تأثیرگذار بر گفتگوهای بازار را شناسایی می‌کند.", positiveKeywords: "محرک‌های مثبت", negativeKeywords: "محرک‌های منفی",
-                    sidebarKeywords: "کلمات کلیدی",
+                    sidebarKeywords: "کلمات کلیدی", sidebarVolatility: "شاخص نوسان",
                 }
             };
 
@@ -487,7 +495,7 @@
                 plotOptions: {
                     radialBar: {
                         startAngle: -135, endAngle: 135,
-                        hollow: { margin: 5, size: '60%' },
+                        hollow: { margin: 15, size: '65%' },
                         track: { background: 'rgba(255,255,255,0.05)', strokeWidth: '100%', dropShadow: { enabled: true, top: -3, left: 0, blur: 4, opacity: 0.35 } },
                         dataLabels: {
                             name: { show: false },
@@ -495,12 +503,12 @@
                         }
                     }
                 },
-                fill: { type: 'gradient', gradient: { shade: 'dark', type: 'horizontal', shadeIntensity: 0.5, inverseColors: false, opacityFrom: 1, opacityTo: 1, stops: [0, 100] } },
+                fill: { type: 'gradient', gradient: { shade: 'dark', type: 'horizontal', shadeIntensity: 0.5, inverseColors: true, opacityFrom: 1, opacityTo: 1, stops: [0, 100] } },
                 stroke: { lineCap: 'round' },
                 labels: ['Sentiment'],
             };
 
-            const timelineOptions = { chart: { type: 'area', height: 250, toolbar: { show: false }, zoom: { enabled: false } }, series: [ { name: 'Stocks', data: [] }, { name: 'Forex', data: [] }, { name: 'Crypto', data: [] } ], dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 2.5 }, xaxis: { type: 'datetime', labels: { style: { colors: '#8b949e' } }, axisBorder: { show: false }, axisTicks: { show: false } }, yaxis: { min: -100, max: 100, labels: { style: { colors: '#8b949e' }, formatter: (val) => typeof val === 'number' ? `${val.toFixed(0)}%` : val } }, colors: [ 'var(--sentiment-positive)', 'var(--sentiment-neutral)', 'var(--sentiment-negative)' ], tooltip: { theme: 'dark' }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', strokeDashArray: 4 }, legend: { labels: { colors: '#c9d1d9' } }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.3, opacityFrom: 0.6, opacityTo: 0.1, stops: [0, 90, 100] } } };
+            const timelineOptions = { chart: { type: 'area', height: 250, toolbar: { show: false }, zoom: { enabled: false } }, series: [ { name: 'Stocks', data: [] }, { name: 'Forex', data: [] }, { name: 'Crypto', data: [] } ], dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 2.5 }, markers: { size: 0 }, xaxis: { type: 'datetime', labels: { style: { colors: '#8b949e' } }, axisBorder: { show: false }, axisTicks: { show: false } }, yaxis: { min: -100, max: 100, labels: { style: { colors: '#8b949e' }, formatter: (val) => typeof val === 'number' ? `${val.toFixed(0)}%` : val } }, colors: [ 'var(--sentiment-positive)', 'var(--sentiment-neutral)', 'var(--sentiment-negative)' ], tooltip: { theme: 'dark' }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', strokeDashArray: 4 }, legend: { labels: { colors: '#c9d1d9' } }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.3, opacityFrom: 0.8, opacityTo: 0.1, stops: [0, 90, 100] } } };
             
             const sourceOptions = {
                 chart: { type: 'radar', height: 280, toolbar: { show: false } },
@@ -508,17 +516,65 @@
                 xaxis: { categories: [], labels: { style: { colors: ['#c9d1d9', '#c9d1d9', '#c9d1d9'], fontSize: '14px', fontWeight: 500 } } },
                 yaxis: { show: false, min: 0, max: 100 },
                 stroke: { width: 3, curve: 'smooth' },
-                fill: { opacity: 0.3 },
-                markers: { size: 5, hover: { size: 7 } },
+                fill: { opacity: 0.4 },
+                markers: { size: 4, hover: { size: 6 } },
                 tooltip: { theme: 'dark', y: { formatter: (val) => typeof val === 'number' ? val.toFixed(0) + "%" : val } },
                 plotOptions: { radar: { polygons: { strokeColors: 'rgba(48, 54, 61, 0.7)', connectorColors: 'rgba(48, 54, 61, 0.7)' } } }
             };
 
-            const correlationOptions = { chart: { type: 'line', height: 280, toolbar: { show: false }, zoom: { enabled: false } }, series: [ { name: 'Sentiment', type: 'area', data: [] }, { name: 'Price', type: 'line', data: [] } ], dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: [3, 2.5] }, xaxis: { type: 'datetime', labels: { style: { colors: '#8b949e' } } }, yaxis: [ { seriesName: 'Sentiment', min: -100, max: 100, labels: { style: { colors: 'var(--accent-cyan)', fontWeight: 500 }, formatter: (val) => typeof val === 'number' ? `${val.toFixed(0)}%` : val }, title: { text: 'Sentiment', style: { color: 'var(--accent-cyan)', fontWeight: 600 } } }, { seriesName: 'Price', opposite: true, labels: { style: { colors: 'var(--accent-orange)', fontWeight: 500 } }, title: { text: 'Price', style: { color: 'var(--accent-orange)', fontWeight: 600 } } } ], colors: ['var(--accent-cyan)', 'var(--accent-orange)'], tooltip: { theme: 'dark', shared: true, intersect: false, y: { formatter: (val, { seriesIndex }) => { if(typeof val !== 'number') return val; return seriesIndex === 0 ? `${val.toFixed(0)}%` : val.toFixed(2); } } }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', strokeDashArray: 4 }, legend: { labels: { colors: '#c9d1d9' } }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.5, opacityFrom: 0.7, opacityTo: 0.1, stops: [0, 90, 100] } } };
+            const correlationOptions = { chart: { type: 'line', height: 280, toolbar: { show: false }, zoom: { enabled: false } }, series: [ { name: 'Sentiment', type: 'area', data: [] }, { name: 'Price', type: 'line', data: [] } ], dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: [3, 2.5] }, markers: { size: 0 }, xaxis: { type: 'datetime', labels: { style: { colors: '#8b949e' } } }, yaxis: [ { seriesName: 'Sentiment', min: -100, max: 100, labels: { style: { colors: 'var(--accent-cyan)', fontWeight: 500 }, formatter: (val) => typeof val === 'number' ? `${val.toFixed(0)}%` : val }, title: { text: 'Sentiment', style: { color: 'var(--accent-cyan)', fontWeight: 600 } } }, { seriesName: 'Price', opposite: true, labels: { style: { colors: 'var(--accent-orange)', fontWeight: 500 } }, title: { text: 'Price', style: { color: 'var(--accent-orange)', fontWeight: 600 } } } ], colors: ['var(--accent-cyan)', 'var(--accent-orange)'], tooltip: { theme: 'dark', shared: true, intersect: false, y: { formatter: (val, { seriesIndex }) => { if(typeof val !== 'number') return val; return seriesIndex === 0 ? `${val.toFixed(0)}%` : val.toFixed(2); } } }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', strokeDashArray: 4 }, legend: { labels: { colors: '#c9d1d9' } }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.5, opacityFrom: 0.7, opacityTo: 0.1, stops: [0, 90, 100] } } };
             
-            const sectorOptions = { chart: { type: 'bar', height: 280, toolbar: { show: false } }, series: [{ data: [] }], plotOptions: { bar: { borderRadius: 4, horizontal: true, distributed: true, barHeight: '50%' } }, dataLabels: { enabled: false }, xaxis: { categories: [], labels: { style: { colors: '#8b949e' } } }, yaxis: { labels: { style: { colors: '#c9d1d9', fontSize: '14px', fontWeight: 500 } } }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)' }, legend: { show: false }, tooltip: { theme: 'dark', x: { show: false }, y: { title: { formatter: seriesName => '' }, formatter: (val) => `${val.toFixed(0)}% Sentiment` } } };
+            const sectorOptions = { chart: { type: 'bar', height: 280, toolbar: { show: false } }, series: [{ data: [] }], plotOptions: { bar: { borderRadius: 4, horizontal: true, distributed: true, barHeight: '50%' } }, dataLabels: { enabled: false }, xaxis: { categories: [], labels: { style: { colors: '#8b949e' } } }, yaxis: { labels: { style: { colors: '#c9d1d9', fontSize: '14px', fontWeight: 500 } } }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } }, legend: { show: false }, tooltip: { theme: 'dark', x: { show: false }, y: { title: { formatter: seriesName => '' }, formatter: (val) => `${val.toFixed(0)}% Sentiment` } } };
 
-            const volatilityOptions = { chart: { type: 'area', height: 80, sparkline: { enabled: true } }, series: [{ data: [] }], stroke: { curve: 'smooth', width: 2 }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.5, opacityFrom: 0.7, opacityTo: 0.1 } }, colors: ['var(--accent-purple)'], tooltip: { theme: 'dark', x: { show: false }, y: { title: { formatter: () => 'Volatility' }, formatter: (val) => val.toFixed(2) } } };
+            const volatilityOptions = { chart: { type: 'area', height: 120, toolbar: { show: false }, sparkline: { enabled: false } }, series: [{ data: [] }], stroke: { curve: 'smooth', width: 2.5 }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.5, opacityFrom: 0.7, opacityTo: 0.1 } }, colors: ['var(--accent-purple)'], tooltip: { theme: 'dark', x: { show: false }, y: { title: { formatter: () => 'Volatility' }, formatter: (val) => val.toFixed(2) } }, grid: { show: false }, dataLabels: { enabled: false }, xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } }, yaxis: { labels: { show: false } } };
+            
+            const MAX_DATA_POINTS = 30;
+            let timelineData = { stocks: [], forex: [], crypto: [] };
+            let correlationData = { sentiment: [], price: [] };
+            let volatilityData = [];
+            let lastPrice = { stocks: 2100000, forex: 1.07, crypto: 68000 };
+            let lastSentiment = { stocks: 50, forex: 50, crypto: 50, twitter: 50, news: 50, telegram: 50, timeline_stocks: (Math.random() - 0.5) * 40, timeline_forex: (Math.random() - 0.5) * 40, timeline_crypto: (Math.random() * 60) - 30, volatility: 15 };
+            let lastSectorSentiment = { tech: 55, banking: 45, energy: 65, retail: 50, healthcare: 40 };
+            
+            function getNewSmoothedValue(oldValue, min, max, volatility) {
+                let change = (Math.random() - 0.5) * volatility;
+                let newValue = oldValue + change;
+                return Math.max(min, Math.min(max, newValue));
+            }
+
+            // Pre-populate data for a more natural start
+            function generateInitialData() {
+                const now = new Date().getTime();
+                for (let i = 0; i < MAX_DATA_POINTS; i++) {
+                    const timestamp = now - (MAX_DATA_POINTS - i) * 2000;
+                    
+                    lastSentiment.timeline_stocks = getNewSmoothedValue(lastSentiment.timeline_stocks, -90, 90, 10);
+                    timelineData.stocks.push([timestamp, lastSentiment.timeline_stocks]);
+                    lastSentiment.timeline_forex = getNewSmoothedValue(lastSentiment.timeline_forex, -90, 90, 10);
+                    timelineData.forex.push([timestamp, lastSentiment.timeline_forex]);
+                    lastSentiment.timeline_crypto = getNewSmoothedValue(lastSentiment.timeline_crypto, -90, 90, 15);
+                    timelineData.crypto.push([timestamp, lastSentiment.timeline_crypto]);
+
+                    lastSentiment.volatility = getNewSmoothedValue(lastSentiment.volatility, 5, 25, 3);
+                    volatilityData.push([timestamp, lastSentiment.volatility]);
+                    
+                    const sentimentForCorrelation = getNewSmoothedValue(lastSentiment[currentAsset] || 50, 10, 95, 5);
+                    const priceMovementFactor = (sentimentForCorrelation - 50) / 50;
+                    const priceVolatility = { stocks: 2500, forex: 0.0003, crypto: 150 }[currentAsset];
+                    lastPrice[currentAsset] += (priceMovementFactor * priceVolatility) + (Math.random() - 0.5) * priceVolatility;
+                    correlationData.sentiment.push([timestamp, sentimentForCorrelation * 2 - 100]);
+                    correlationData.price.push([timestamp, lastPrice[currentAsset]]);
+                }
+            }
+            generateInitialData();
+            
+            // Assign pre-populated data to chart options
+            timelineOptions.series[0].data = timelineData.stocks;
+            timelineOptions.series[1].data = timelineData.forex;
+            timelineOptions.series[2].data = timelineData.crypto;
+            volatilityOptions.series[0].data = volatilityData;
+            correlationOptions.series[0].data = correlationData.sentiment;
+            correlationOptions.series[1].data = correlationData.price;
 
             const stocksChart = new ApexCharts(document.querySelector("#stocks-chart"), gaugeOptions);
             const forexChart = new ApexCharts(document.querySelector("#forex-chart"), gaugeOptions);
@@ -530,28 +586,28 @@
             const volatilityChart = new ApexCharts(document.querySelector("#volatility-chart"), volatilityOptions);
             [stocksChart, forexChart, cryptoChart, timelineChart, sourceChart, correlationChart, sectorChart, volatilityChart].forEach(c => c.render());
 
-            const MAX_DATA_POINTS = 30;
-            let timelineData = { stocks: [], forex: [], crypto: [] };
-            let correlationData = { sentiment: [], price: [] };
-            let volatilityData = [];
-            let lastPrice = { stocks: 2100000, forex: 1.07, crypto: 68000 };
-            let lastSentiment = { stocks: 50, forex: 50, crypto: 50, twitter: 50, news: 50, telegram: 50, timeline_stocks: 0, timeline_forex: 0, timeline_crypto: 0, volatility: 10 };
-            let lastSectorSentiment = { tech: 55, banking: 45, energy: 65, retail: 50, healthcare: 40 };
-            
-            function getNewSmoothedValue(oldValue, min, max, volatility) {
-                let change = (Math.random() - 0.5) * volatility;
-                let newValue = oldValue + change;
-                return Math.max(min, Math.min(max, newValue));
-            }
-
             let currentMarketState = {};
-            const mockEvents = [ { title: "FED hints at interest rate cuts, market reacts positively.", sentiment: "Positive", source: "News", type: "event" }, { title: "Rumors of $BTC ETF approval causing surge in speculation.", sentiment: "Positive", source: "Twitter", type: "rumor" }, { title: "Unexpected inflation data from EU impacts EUR/USD pairs.", sentiment: "Negative", source: "News", type: "event" }, { title: "Tech Giant $AAPL misses earnings expectations, stock dips.", sentiment: "Negative", source: "Telegram", type: "event" }, { title: "Major crypto exchange announces security audit completion.", sentiment: "Neutral", source: "Twitter", type: "event" }, { title: "Central Bank of Iran holds currency rates steady.", sentiment: "Neutral", source: "News", type: "event"}, { title: "Retail trader sentiment for $TSLA is overwhelmingly bullish on social media.", sentiment: "Positive", source: "Twitter", type: "rumor"}, { title: "بانک مرکزی نرخ بهره را برای کنترل تورم افزایش داد.", sentiment: "Neutral", source: "News", type: "event" }, { title: "شایعاتی مبنی بر عرضه اولیه سهام یک شرکت فناوری بزرگ در بورس تهران.", sentiment: "Positive", source: "Telegram", type: "rumor" }, { title: "تحلیلگران پیش‌بینی می‌کنند که شاخص کل بورس در هفته آینده رشد خواهد کرد.", sentiment: "Positive", source: "News", type: "event" }, { title: "گزارش‌های ضد و نقیض درباره مذاکرات تجاری جدید.", sentiment: "Negative", source: "Twitter", type: "rumor" }, { title: "افزایش قیمت دلار در بازار آزاد نگرانی‌هایی را ایجاد کرده است.", sentiment: "Negative", source: "Telegram", type: "event" } ];
+            const mockEvents = [
+                { title: "FED hints at interest rate cuts, market reacts positively.", sentiment: "Positive", source: "News", type: "event" },
+                { title: "Rumors of $BTC ETF approval causing surge in speculation.", sentiment: "Positive", source: "Twitter", type: "rumor", confidence: Math.floor(Math.random() * 40) + 60 },
+                { title: "Unexpected inflation data from EU impacts EUR/USD pairs.", sentiment: "Negative", source: "News", type: "event" },
+                { title: "Tech Giant $AAPL misses earnings expectations, stock dips.", sentiment: "Negative", source: "Telegram", type: "event" },
+                { title: "Major crypto exchange announces security audit completion.", sentiment: "Neutral", source: "Twitter", type: "event" },
+                { title: "Central Bank of Iran holds currency rates steady.", sentiment: "Neutral", source: "News", type: "event"},
+                { title: "Retail trader sentiment for $TSLA is overwhelmingly bullish on social media.", sentiment: "Positive", source: "Twitter", type: "rumor", confidence: Math.floor(Math.random() * 30) + 40 },
+                { title: "بانک مرکزی نرخ بهره را برای کنترل تورم افزایش داد.", sentiment: "Neutral", source: "News", type: "event" },
+                { title: "شایعاتی مبنی بر عرضه اولیه سهام یک شرکت فناوری بزرگ در بورس تهران.", sentiment: "Positive", source: "Telegram", type: "rumor", confidence: Math.floor(Math.random() * 50) + 50 },
+                { title: "تحلیلگران پیش‌بینی می‌کنند که شاخص کل بورس در هفته آینده رشد خواهد کرد.", sentiment: "Positive", source: "News", type: "event" },
+                { title: "گزارش‌های ضد و نقیض درباره مذاکرات تجاری جدید.", sentiment: "Negative", source: "Twitter", type: "rumor", confidence: Math.floor(Math.random() * 40) + 20 },
+                { title: "افزایش قیمت دلار در بازار آزاد نگرانی‌هایی را ایجاد کرده است.", sentiment: "Negative", source: "Telegram", type: "event" }
+            ];
             const mockKeywords = {
                 positive: ["Bullish", "ATH", "Breakout", "Growth", "Profit", "Upgrade", "Buy", "Support", "Booming"],
                 negative: ["Bearish", "Crash", "Sell-off", "Decline", "Loss", "Downgrade", "Risk", "Fear", "Bubble"]
             };
             
             function getSentimentColorClass(sentiment) { if (sentiment === 'Positive') return 'text-green-400'; if (sentiment === 'Negative') return 'text-red-400'; return 'text-yellow-400'; }
+            function getConfidenceColorClass(confidence) { if (confidence > 75) return 'text-green-400'; if (confidence < 40) return 'text-red-400'; return 'text-yellow-400'; }
             function getTranslatedSentiment(sentimentKey) { return { 'Positive': translations[currentLanguage].positive, 'Negative': translations[currentLanguage].negative, 'Neutral': translations[currentLanguage].neutral, }[sentimentKey] || sentimentKey; }
 
             function updateCorrelationChartAsset() {
@@ -670,7 +726,23 @@
                             data.slice(0, 5).forEach(item => {
                                 const itemEl = document.createElement('div');
                                 itemEl.className = 'py-3 border-b border-gray-800/50 last:border-b-0';
-                                itemEl.innerHTML = `<div class="flex items-start gap-4"><div class="flex-shrink-0 mt-1 text-gray-500">${icons[item.source.toLowerCase()]}</div><div class="flex-grow"><p class="font-medium text-gray-300 text-sm leading-relaxed">${item.title}</p><div class="flex items-center mt-2 text-xs font-semibold ${getSentimentColorClass(item.sentiment)}">${icons[item.sentiment.toLowerCase()]}<span class="ml-1.5">${getTranslatedSentiment(item.sentiment)}</span></div></div></div>`;
+                                itemEl.innerHTML = `<div class="flex items-start gap-4">
+                                    <div class="flex-shrink-0 mt-1 text-gray-500">${icons[item.source.toLowerCase()]}</div>
+                                    <div class="flex-grow">
+                                        <p class="font-medium text-gray-300 text-sm leading-relaxed">${item.title}</p>
+                                        <div class="flex items-center justify-between mt-2 text-xs">
+                                            <div class="flex items-center font-semibold ${getSentimentColorClass(item.sentiment)}">
+                                                ${icons[item.sentiment.toLowerCase()]}
+                                                <span class="ml-1.5">${getTranslatedSentiment(item.sentiment)}</span>
+                                            </div>
+                                            ${item.type === 'rumor' && item.confidence ? `
+                                            <div class="flex items-center">
+                                                <span class="font-semibold text-gray-400 mr-2" data-translate-key="rumorConfidence">${translations[currentLanguage].rumorConfidence}:</span>
+                                                <span class="font-bold ${getConfidenceColorClass(item.confidence)}">${item.confidence}%</span>
+                                            </div>` : ''}
+                                        </div>
+                                    </div>
+                                </div>`;
                                 feedElement.appendChild(itemEl);
                             });
                         };
@@ -749,3 +821,4 @@
     </script>
 </body>
 </html>
+

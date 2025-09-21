@@ -194,6 +194,12 @@
                         <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarVolatility">Volatility Index</span>
                     </a>
                 </li>
+                <li>
+                    <a href="#market-volatility" class="flex items-center p-2 text-gray-400 rounded-lg group">
+                        <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 18l-4-4-4 4m8-12l-4 4-4-4"></path></svg>
+                        <span class="flex-1 ml-3 whitespace-nowrap" data-translate-key="sidebarMarketVolatility">Market Volatility</span>
+                    </a>
+                </li>
                  <li>
                     <a href="#recent-events" class="flex items-center p-2 text-gray-400 rounded-lg group">
                         <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3h3m-3 4h3m-3 4h3m-3 4h3"></path></svg>
@@ -292,11 +298,30 @@
                         <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="sectorSentimentDesc">Shows which industry sectors are driving the current market sentiment.</p>
                         <div id="sector-chart"></div>
                     </section>
+                    
+                    <section id="market-volatility" class="card p-5">
+                        <h2 class="text-xl font-bold text-white" data-translate-key="marketVolatilityTitle">Market Volatility Index</h2>
+                        <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="marketVolatilityDesc">A visual representation of expected price fluctuations for different markets.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div>
+                                <h3 class="text-md font-semibold text-center text-white" data-translate-key="iranStocks">Iran Stocks</h3>
+                                <div id="volatility-chart-stocks"></div>
+                            </div>
+                            <div>
+                                <h3 class="text-md font-semibold text-center text-white" data-translate-key="forex">Forex</h3>
+                                <div id="volatility-chart-forex"></div>
+                            </div>
+                            <div>
+                                <h3 class="text-md font-semibold text-center text-white" data-translate-key="crypto">Crypto</h3>
+                                <div id="volatility-chart-crypto"></div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
 
                 <div class="lg:col-span-1 flex flex-col gap-6">
                     <section id="volatility-index" class="card p-5">
-                        <h2 class="text-xl font-bold text-white" data-translate-key="volatilityIndexTitle">Volatility Index</h2>
+                        <h2 class="text-xl font-bold text-white" data-translate-key="volatilityIndexTitle">Overall Volatility Index</h2>
                         <p class="text-sm text-gray-400 mt-1 mb-4" data-translate-key="volatilityIndexDesc">Measures the expected market fluctuation based on sentiment shifts.</p>
                         <div id="volatility-chart" style="min-height: 120px;"></div>
                     </section>
@@ -418,9 +443,10 @@
                     sidebarGauges: "Sentiment Gauges", sidebarTimeline: "Sentiment Timeline", sidebarCorrelation: "Price Correlation", sidebarSources: "Sources", sidebarLanguage: "Language",
                     sidebarSectors: "Sector Sentiment", sectorSentimentTitle: "Stock Market Sector Sentiment", sectorSentimentDesc: "Shows which industry sectors are driving the current market sentiment.",
                     tech: "Technology", banking: "Banking", energy: "Energy", retail: "Retail", healthcare: "Healthcare",
-                    volatilityIndexTitle: "Volatility Index", volatilityIndexDesc: "Measures the expected market fluctuation based on sentiment shifts.",
+                    volatilityIndexTitle: "Overall Volatility Index", volatilityIndexDesc: "Measures the expected market fluctuation based on sentiment shifts.",
+                    marketVolatilityTitle: "Market Volatility Index", marketVolatilityDesc: "A visual representation of expected price fluctuations for different markets.",
                     keywordDriversTitle: "Top Keyword Drivers", keywordDriversDesc: "Identifies keywords influencing market conversations.", positiveKeywords: "Positive Drivers", negativeKeywords: "Negative Drivers",
-                    sidebarKeywords: "Keyword Drivers", sidebarVolatility: "Volatility Index",
+                    sidebarKeywords: "Keyword Drivers", sidebarVolatility: "Overall Volatility", sidebarMarketVolatility: "Market Volatility",
                 },
                 fa: { 
                     dashboardTitle: "فین‌سنتریکس", dashboardSubtitle: "تحلیل احساسات مالی جهانی", aiBriefing: "گزارش هوشمند", lastUpdated: "آخرین بروزرسانی", 
@@ -444,9 +470,10 @@
                     sidebarGauges: "ابزارهای احساسات", sidebarTimeline: "خط زمانی احساسات", sidebarCorrelation: "همبستگی قیمت", sidebarSources: "منابع", sidebarLanguage: "زبان",
                     sidebarSectors: "احساسات بخشی", sectorSentimentTitle: "احساسات بخش‌های بازار سهام", sectorSentimentDesc: "نشان می‌دهد کدام بخش‌های صنعتی احساسات فعلی بازار را هدایت می‌کنند.",
                     tech: "فناوری", banking: "بانکداری", energy: "انرژی", retail: "خرده‌فروشی", healthcare: "مراقبت‌های بهداشتی",
-                    volatilityIndexTitle: "شاخص نوسان", volatilityIndexDesc: "نوسانات مورد انتظار بازار را بر اساس تغییرات احساسات اندازه‌گیری می‌کند.",
+                    volatilityIndexTitle: "شاخص نوسان کلی", volatilityIndexDesc: "نوسانات مورد انتظار بازار را بر اساس تغییرات احساسات اندازه‌گیری می‌کند.",
+                    marketVolatilityTitle: "شاخص نوسانات بازار", marketVolatilityDesc: "نمایش بصری نوسانات قیمتی مورد انتظار برای بازارهای مختلف.",
                     keywordDriversTitle: "کلمات کلیدی اصلی", keywordDriversDesc: "کلمات کلیدی تأثیرگذار بر گفتگوهای بازار را شناسایی می‌کند.", positiveKeywords: "محرک‌های مثبت", negativeKeywords: "محرک‌های منفی",
-                    sidebarKeywords: "کلمات کلیدی", sidebarVolatility: "شاخص نوسان",
+                    sidebarKeywords: "کلمات کلیدی", sidebarVolatility: "نوسان کلی", sidebarMarketVolatility: "نوسانات بازار",
                 }
             };
 
@@ -527,13 +554,33 @@
             const sectorOptions = { chart: { type: 'bar', height: 280, toolbar: { show: false } }, series: [{ data: [] }], plotOptions: { bar: { borderRadius: 4, horizontal: true, distributed: true, barHeight: '50%' } }, dataLabels: { enabled: false }, xaxis: { categories: [], labels: { style: { colors: '#8b949e' } } }, yaxis: { labels: { style: { colors: '#c9d1d9', fontSize: '14px', fontWeight: 500 } } }, grid: { borderColor: 'rgba(48, 54, 61, 0.5)', xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } }, legend: { show: false }, tooltip: { theme: 'dark', x: { show: false }, y: { title: { formatter: seriesName => '' }, formatter: (val) => `${val.toFixed(0)}% Sentiment` } } };
 
             const volatilityOptions = { chart: { type: 'area', height: 120, toolbar: { show: false }, sparkline: { enabled: false } }, series: [{ data: [] }], stroke: { curve: 'smooth', width: 2.5 }, fill: { type: 'gradient', gradient: { shade: 'dark', type: 'vertical', shadeIntensity: 0.5, opacityFrom: 0.7, opacityTo: 0.1 } }, colors: ['var(--accent-purple)'], tooltip: { theme: 'dark', x: { show: false }, y: { title: { formatter: () => 'Volatility' }, formatter: (val) => val.toFixed(2) } }, grid: { show: false }, dataLabels: { enabled: false }, xaxis: { labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } }, yaxis: { labels: { show: false } } };
+
+            const marketVolatilityOptions = {
+                chart: { type: 'area', height: 160, sparkline: { enabled: true } },
+                dataLabels: { enabled: false },
+                stroke: { curve: 'smooth', width: 2 },
+                fill: { type: 'gradient', gradient: { shade: 'dark', opacityFrom: 0.9, opacityTo: 0.1, stops: [0, 90, 100] } },
+                series: [{ name: 'Volatility', data: [] }],
+                yaxis: { min: 0, max: 50, labels: { show: false } },
+                xaxis: { type: 'datetime', labels: { show: false } },
+                tooltip: {
+                    theme: 'dark',
+                    x: { show: false },
+                    y: {
+                        title: { formatter: () => 'Volatility' },
+                        formatter: (val) => val.toFixed(2)
+                    }
+                }
+            };
+
             
             const MAX_DATA_POINTS = 30;
             let timelineData = { stocks: [], forex: [], crypto: [] };
             let correlationData = { sentiment: [], price: [] };
             let volatilityData = [];
+            let marketVolatilityData = { stocks: [], forex: [], crypto: [] };
             let lastPrice = { stocks: 2100000, forex: 1.07, crypto: 68000 };
-            let lastSentiment = { stocks: 50, forex: 50, crypto: 50, twitter: 50, news: 50, telegram: 50, timeline_stocks: (Math.random() - 0.5) * 40, timeline_forex: (Math.random() - 0.5) * 40, timeline_crypto: (Math.random() * 60) - 30, volatility: 15 };
+            let lastSentiment = { stocks: 50, forex: 50, crypto: 50, twitter: 50, news: 50, telegram: 50, timeline_stocks: (Math.random() - 0.5) * 40, timeline_forex: (Math.random() - 0.5) * 40, timeline_crypto: (Math.random() * 60) - 30, volatility: 15, volatility_stocks: 15, volatility_forex: 10, volatility_crypto: 25 };
             let lastSectorSentiment = { tech: 55, banking: 45, energy: 65, retail: 50, healthcare: 40 };
             
             function getNewSmoothedValue(oldValue, min, max, volatility) {
@@ -558,6 +605,13 @@
                     lastSentiment.volatility = getNewSmoothedValue(lastSentiment.volatility, 5, 25, 3);
                     volatilityData.push([timestamp, lastSentiment.volatility]);
                     
+                    lastSentiment.volatility_stocks = getNewSmoothedValue(lastSentiment.volatility_stocks, 10, 40, 5);
+                    marketVolatilityData.stocks.push([timestamp, lastSentiment.volatility_stocks]);
+                    lastSentiment.volatility_forex = getNewSmoothedValue(lastSentiment.volatility_forex, 5, 25, 3);
+                    marketVolatilityData.forex.push([timestamp, lastSentiment.volatility_forex]);
+                    lastSentiment.volatility_crypto = getNewSmoothedValue(lastSentiment.volatility_crypto, 20, 50, 8);
+                    marketVolatilityData.crypto.push([timestamp, lastSentiment.volatility_crypto]);
+
                     const sentimentForCorrelation = getNewSmoothedValue(lastSentiment[currentAsset] || 50, 10, 95, 5);
                     const priceMovementFactor = (sentimentForCorrelation - 50) / 50;
                     const priceVolatility = { stocks: 2500, forex: 0.0003, crypto: 150 }[currentAsset];
@@ -575,6 +629,8 @@
             volatilityOptions.series[0].data = volatilityData;
             correlationOptions.series[0].data = correlationData.sentiment;
             correlationOptions.series[1].data = correlationData.price;
+            marketVolatilityOptions.series[0].data = marketVolatilityData.stocks;
+
 
             const stocksChart = new ApexCharts(document.querySelector("#stocks-chart"), gaugeOptions);
             const forexChart = new ApexCharts(document.querySelector("#forex-chart"), gaugeOptions);
@@ -584,7 +640,13 @@
             const correlationChart = new ApexCharts(document.querySelector("#correlation-chart"), correlationOptions);
             const sectorChart = new ApexCharts(document.querySelector("#sector-chart"), sectorOptions);
             const volatilityChart = new ApexCharts(document.querySelector("#volatility-chart"), volatilityOptions);
-            [stocksChart, forexChart, cryptoChart, timelineChart, sourceChart, correlationChart, sectorChart, volatilityChart].forEach(c => c.render());
+            
+            const volatilityChartStocks = new ApexCharts(document.querySelector("#volatility-chart-stocks"), { ...marketVolatilityOptions, colors: ['var(--accent-green)'] });
+            const volatilityChartForex = new ApexCharts(document.querySelector("#volatility-chart-forex"), { ...marketVolatilityOptions, colors: ['var(--accent-blue)'] });
+            const volatilityChartCrypto = new ApexCharts(document.querySelector("#volatility-chart-crypto"), { ...marketVolatilityOptions, colors: ['var(--accent-orange)'] });
+
+
+            [stocksChart, forexChart, cryptoChart, timelineChart, sourceChart, correlationChart, sectorChart, volatilityChart, volatilityChartStocks, volatilityChartForex, volatilityChartCrypto].forEach(c => c.render());
 
             let currentMarketState = {};
             const mockEvents = [
@@ -671,6 +733,21 @@
                     volatilityData.push([newTimestamp, lastSentiment.volatility]);
                     if (volatilityData.length > MAX_DATA_POINTS) volatilityData.shift();
                     volatilityChart.updateSeries([{ data: volatilityData }]);
+
+                    lastSentiment.volatility_stocks = getNewSmoothedValue(lastSentiment.volatility_stocks, 10, 40, 5);
+                    marketVolatilityData.stocks.push([newTimestamp, lastSentiment.volatility_stocks]);
+                    if (marketVolatilityData.stocks.length > MAX_DATA_POINTS) marketVolatilityData.stocks.shift();
+                    volatilityChartStocks.updateSeries([{ data: marketVolatilityData.stocks }]);
+
+                    lastSentiment.volatility_forex = getNewSmoothedValue(lastSentiment.volatility_forex, 5, 25, 3);
+                    marketVolatilityData.forex.push([newTimestamp, lastSentiment.volatility_forex]);
+                    if (marketVolatilityData.forex.length > MAX_DATA_POINTS) marketVolatilityData.forex.shift();
+                    volatilityChartForex.updateSeries([{ data: marketVolatilityData.forex }]);
+
+                    lastSentiment.volatility_crypto = getNewSmoothedValue(lastSentiment.volatility_crypto, 20, 50, 8);
+                    marketVolatilityData.crypto.push([newTimestamp, lastSentiment.volatility_crypto]);
+                    if (marketVolatilityData.crypto.length > MAX_DATA_POINTS) marketVolatilityData.crypto.shift();
+                    volatilityChartCrypto.updateSeries([{ data: marketVolatilityData.crypto }]);
 
                     const sentimentForCorrelation = marketData[currentAsset].sentiment;
                     const priceMovementFactor = (sentimentForCorrelation - 50) / 50;
@@ -821,4 +898,3 @@
     </script>
 </body>
 </html>
-
